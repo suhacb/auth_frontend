@@ -1,6 +1,7 @@
 <main class="app-content">
+  <!--
   <mat-toolbar>
-    <button matIconButton [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with menu icon">
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with menu icon">
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -12,7 +13,7 @@
         <mat-icon>science</mat-icon>
         <span>Test</span>
       </button>
-      <button mat-menu-item [routerLink]="'/'">
+      <button mat-menu-item [routerLink]="'/login'">
         <mat-icon>login</mat-icon>
         <span>Login</span>
       </button>
@@ -27,13 +28,14 @@
     </mat-menu>
     <span>Nutrients</span>
     <span class="example-spacer"></span>
-    <button matIconButton class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>favorite</mat-icon>
     </button>
-    <button matIconButton class="example-icon" aria-label="Example icon-button with share icon">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
       <mat-icon>share</mat-icon>
     </button>
   </mat-toolbar>
+  -->
 
   <router-outlet></router-outlet>
 </main>

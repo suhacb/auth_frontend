@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Test } from './test/test';
+import { Login } from './login/login';
 
 const routes: Routes = [
   {
     path: 'test',
     component: Test
+  },
+  {
+    path: 'login',
+    component: Login
   }
 ];
 
