@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/htt
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarErrorComponent } from '../shared/snackbar-error/snackbar-error';
 import { SnackbarSuccessComponent } from '../shared/snackbar-success/snackbar-success';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,13 +14,23 @@ import { SnackbarSuccessComponent } from '../shared/snackbar-success/snackbar-su
 })
 export class Login implements OnInit {
   loginForm!: FormGroup;
+  redirect_uri: string | null = null;
   
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private snackbar: MatSnackBar) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private http: HttpClient,
+    private snackbar: MatSnackBar,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       username: [''],
       password: ['']
+    });
+    
+    this.route.queryParamMap.subscribe(params => {
+      this.redirect_uri = params.get('redirect_uri');
     });
   }
 
@@ -33,14 +44,17 @@ export class Login implements OnInit {
   
     this.http.post(url, body, { observe: 'response' }).subscribe({
       next: (response: HttpResponse<any>) => {
-        let message: string = 'Login successful.';
-        this.snackbar.openFromComponent(SnackbarSuccessComponent, {
-          data: { message },
-          duration: 5000, // optional auto-dismiss
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          panelClass: ['snackbar-success']
-        });
+        const url = new URL(this.redirect_uri!);
+        window.location.href = url.toString();
+
+        // let message: string = 'Login successful.';
+        // this.snackbar.openFromComponent(SnackbarSuccessComponent, {
+        //   data: { message },
+        //   duration: 5000, // optional auto-dismiss
+        //   horizontalPosition: 'right',
+        //   verticalPosition: 'bottom',
+        //   panelClass: ['snackbar-success']
+        // });
       },
       error: (err) => {
         this.handleApiErrors(err);
