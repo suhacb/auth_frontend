@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Spinner } from './shared/spinner/spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarErrorComponent } from './shared/snackbar-error/snackbar-error';
+import { SnackbarSuccessComponent } from './shared/snackbar-success/snackbar-success';
 
 
 
@@ -29,7 +30,8 @@ import { SnackbarErrorComponent } from './shared/snackbar-error/snackbar-error';
     Test,
     Login,
     Spinner,
-    SnackbarErrorComponent
+    SnackbarErrorComponent,
+    SnackbarSuccessComponent
   ],
   imports: [
     BrowserModule,

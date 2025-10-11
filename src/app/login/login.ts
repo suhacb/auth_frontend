@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarErrorComponent } from '../shared/snackbar-error/snackbar-error';
+import { SnackbarSuccessComponent } from '../shared/snackbar-success/snackbar-success';
 
 @Component({
   selector: 'app-login',
@@ -32,8 +33,14 @@ export class Login implements OnInit {
   
     this.http.post(url, body, { observe: 'response' }).subscribe({
       next: (response: HttpResponse<any>) => {
-        console.log('Status code:', response.status);
-        console.log('Response body:', response.body);
+        let message: string = 'Login successful.';
+        this.snackbar.openFromComponent(SnackbarSuccessComponent, {
+          data: { message },
+          duration: 5000, // optional auto-dismiss
+          horizontalPosition: 'right',
+          verticalPosition: 'bottom',
+          panelClass: ['snackbar-success']
+        });
       },
       error: (err) => {
         this.handleApiErrors(err);

@@ -45,3 +45,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   box-shadow: none !important;
   color: #fff !important;
 }
+
+/* Success snackbar */
+.snackbar-success .mat-mdc-snackbar-surface {
+  /* outer container */
+  background: transparent !important; /* make outer container transparent */
+  box-shadow: none !important;
+  color: #fff !important;
+}
