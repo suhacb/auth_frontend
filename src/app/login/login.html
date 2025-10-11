@@ -8,11 +8,13 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Username</mat-label>
                     <input matInput formControlName="username">
+                    <mat-error *ngIf="loginForm.get('username')?.getError('server')">{{loginForm.get('username')?.getError('server')}}</mat-error>
                 </mat-form-field>
     
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Password</mat-label>
-                    <input matInput type="password" formControlName="password">
+                    <input matInput type="password" formControlName="password" />
+                    <mat-error *ngIf="loginForm.get('password')?.getError('server')">{{loginForm.get('password')?.getError('server')}}</mat-error>
                 </mat-form-field>
     
             <button mat-raised-button color="primary" class="full-width" type="submit">
@@ -21,4 +23,5 @@
             </form>
         </mat-card-content>
     </mat-card>
+
 </div>

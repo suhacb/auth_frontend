@@ -37,3 +37,11 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Error snackbar */
+.snackbar-error .mat-mdc-snackbar-surface {
+  /* outer container */
+  background: transparent !important; /* make outer container transparent */
+  box-shadow: none !important;
+  color: #fff !important;
+}

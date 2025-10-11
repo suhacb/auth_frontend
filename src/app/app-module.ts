@@ -18,6 +18,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Spinner } from './shared/spinner/spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SnackbarErrorComponent } from './shared/snackbar-error/snackbar-error';
 
 
 
@@ -26,7 +28,8 @@ import { Spinner } from './shared/spinner/spinner';
     App,
     Test,
     Login,
-    Spinner
+    Spinner,
+    SnackbarErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { Spinner } from './shared/spinner/spinner';
     MatInputModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
