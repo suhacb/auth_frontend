@@ -23,15 +23,12 @@ export class Login implements OnInit {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const { username, password } = this.loginForm.value;
-      console.log('Login attempt:', username, password);
-      // Here you can call your authentication service
-    const url = 'http://localhost:9025/api/login'; // replace with your endpoint
-    const body = {
-      username: this.loginForm.value.username,
-      password: this.loginForm.value.password
-    };
-
-    // Use observe: 'response' to get the full HttpResponse
+      const url = 'http://localhost:9025/api/login';
+      const body = {
+        username: this.loginForm.value.username,
+        password: this.loginForm.value.password
+      };
+    
     this.http.post(url, body, { observe: 'response' }).subscribe({
       next: (response: HttpResponse<any>) => {
         console.log('Status code:', response.status);

@@ -5,13 +5,18 @@ import { Login } from './login/login';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },
+  {
     path: 'test',
     component: Test
   },
   {
     path: 'login',
     component: Login
-  }
+  },
 ];
 
 @NgModule({
