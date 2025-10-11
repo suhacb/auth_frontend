@@ -1,5 +1,7 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { SpinnerInterceptor } from './shared/spinner/spinner.interceptor';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -14,6 +16,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Spinner } from './shared/spinner/spinner';
 
 
 
@@ -21,7 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     App,
     Test,
-    Login
+    Login,
+    Spinner
   ],
   imports: [
     BrowserModule,
@@ -34,10 +39,12 @@ import { HttpClientModule } from '@angular/common/http';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatProgressSpinnerModule
   ],
   providers: [
-    provideBrowserGlobalErrorListeners()
+    provideBrowserGlobalErrorListeners(),
+    { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }
   ],
   bootstrap: [App]
 })
