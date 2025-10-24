@@ -1,6 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { SpinnerInterceptor } from './shared/spinner/spinner.interceptor';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -21,6 +21,7 @@ import { Spinner } from './shared/spinner/spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarErrorComponent } from './shared/snackbar-error/snackbar-error';
 import { SnackbarSuccessComponent } from './shared/snackbar-success/snackbar-success';
+import { appHeadersInterceptor } from './core/http/headers.interceptor';
 
 
 
@@ -50,7 +51,12 @@ import { SnackbarSuccessComponent } from './shared/snackbar-success/snackbar-suc
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
-    { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }
+    provideHttpClient(
+      withInterceptors([
+        appHeadersInterceptor,
+        SpinnerInterceptor
+      ])
+    )
   ],
   bootstrap: [App]
 })

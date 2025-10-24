@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient, HttpErrorResponse, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,6 +13,9 @@ import { AppStore } from '../shared/store';
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
+
+@Injectable({providedIn: 'root'})
+
 export class Login implements OnInit {
   loginForm!: FormGroup;
   redirect_uri: string | null = null;
@@ -44,18 +47,17 @@ export class Login implements OnInit {
       username: this.loginForm.value.username,
       password: this.loginForm.value.password
     };
-    const headers = new HttpHeaders({
-      'X-Application-Name': 'auth-frontend',
-      'X-Client-Url': 'http://localhost:9020'
-    });
+
+
   
-    this.http.post(url, body,  { headers, observe: 'response' }).subscribe({
+    this.http.post(url, body,  { observe: 'response' }).subscribe({
       next: (response: HttpResponse<any>) => {
         this.store.setData(response.body);
         const url = new URL(this.redirect_uri! + '/test');
         this.router.navigate(['/test'])
       },
       error: (err) => {
+        console.error(err);
         this.handleApiErrors(err);
         if (err.status >= 400 && err.status < 500) {
           // assuming backend sends { "username": "Error message" }
@@ -81,6 +83,7 @@ export class Login implements OnInit {
         this.loginForm.get('password')?.setErrors({ server: errors.error.errors?.password });
       }
     } else {
+      console.info(errors);
       let message: string = 'Server-side error ' + errors.status + ': ' + errors.error?.error;
       this.snackbar.openFromComponent(SnackbarErrorComponent, {
         data: { message },
