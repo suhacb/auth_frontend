@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AppStore } from '../shared/store';
+import { AppStore } from '../store/app.store';
 
 @Component({
   selector: 'app-test',
@@ -10,9 +10,4 @@ import { AppStore } from '../shared/store';
 export class Test {
   constructor(public store: AppStore) {}
 
-  ngOnInit() {
-    this.store.data$.subscribe(data => {
-      console.log('Received store data:', data);
-    });
-  }
 }

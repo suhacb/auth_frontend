@@ -5,7 +5,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarErrorComponent } from '../shared/snackbar-error/snackbar-error';
 import { SnackbarSuccessComponent } from '../shared/snackbar-success/snackbar-success';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { AppStore } from '../shared/store';
+import { AppStore } from '../store/app.store';
+import { Token } from './token';
+
 
 @Component({
   selector: 'app-login',
@@ -25,7 +27,7 @@ export class Login implements OnInit {
     private http: HttpClient,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
-    private store: AppStore,
+    public store: AppStore,
     private router: Router
   ) { }
 
@@ -48,11 +50,10 @@ export class Login implements OnInit {
       password: this.loginForm.value.password
     };
 
-
-  
     this.http.post(url, body,  { observe: 'response' }).subscribe({
       next: (response: HttpResponse<any>) => {
-        this.store.setData(response.body);
+        this.store.auth.setToken(new Token(response.body));
+        console.log(this.store.auth.accessToken());
         const url = new URL(this.redirect_uri! + '/test');
         this.router.navigate(['/test'])
       },

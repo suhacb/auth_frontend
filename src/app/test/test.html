@@ -2,6 +2,10 @@
     Test works!
 </div>
 
-<div *ngIf="store.data$ | async as data">
-  Access Token: {{ data.access_token }}
+<div>
+  Access Token: {{ store.auth.accessToken() }}
+</div>
+
+<div>
+  Refresh Token: {{ store.auth.refreshToken() }}
 </div>
