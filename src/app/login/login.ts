@@ -42,32 +42,24 @@ export class Login implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    const { username, password } = this.loginForm.value;
-    const url = 'http://localhost:9025/api/auth/login';
-    const body = {
-      username: this.loginForm.value.username,
-      password: this.loginForm.value.password
-    };
-
-    this.http.post(url, body,  { observe: 'response' }).subscribe({
-      next: (response: HttpResponse<any>) => {
-        this.store.auth.setToken(new Token(response.body));
-        console.log(this.store.auth.accessToken());
-        const url = new URL(this.redirect_uri! + '/test');
-        this.router.navigate(['/test'])
-      },
-      error: (err) => {
+  async onSubmit() {
+    try {
+      await this.store.auth.login(this.loginForm.value.username, this.loginForm.value.password);
+      this.router.navigate(['/test']);
+    } catch (err: unknown) {
+      // Narrow the type
+      if (err instanceof HttpErrorResponse) {
         console.error(err);
         this.handleApiErrors(err);
         if (err.status >= 400 && err.status < 500) {
           // assuming backend sends { "username": "Error message" }
           return;
         }
+      } else {
+        console.error('Unexpected error', err);
       }
-    });
-
-  }
+    }
+}
 
   handleApiErrors(errors: HttpErrorResponse) {
     let errorMessages:{

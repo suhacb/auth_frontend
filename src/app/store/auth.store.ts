@@ -1,9 +1,15 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { Token } from '../login/token';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 
 export class AuthStore {
+    private http = inject(HttpClient);
+    private router = inject(Router);
+
     private _accessToken = signal<string | null>(null);
     private _tokenType = signal<string | null>(null);
     private _expiresIn = signal<number | null>(null);
@@ -79,5 +85,21 @@ export class AuthStore {
 
     reset() {
         this.setToken();
+    }
+
+    login(username: string, password: string): Promise<HttpResponse<any>> {
+        const url = 'http://localhost:9025/api/auth/login';
+        const body = {username, password};
+
+        const request$ = this.http.post(url, body, { observe: 'response' });
+
+        return firstValueFrom(request$)
+            .then(response => {
+                this.setToken(new Token(response.body));
+                return response;
+            })
+            .catch((error: HttpResponse<any>) => {
+                throw error;
+            })
     }
 }
