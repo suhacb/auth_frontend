@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './auth-layout.scss'
 })
 export class AuthLayout {
-  constructor(private store: AuthStore, private router: Router) {}
+  constructor(public store: AuthStore, private router: Router) {}
 
   logout() {
     this.store.reset();

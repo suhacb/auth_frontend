@@ -6,6 +6,21 @@
   <button mat-button routerLink="/">Home</button>
   <button mat-button routerLink="/profile">Profile</button>
   <button mat-button (click)="logout()">Logout</button>
+  <ng-container>
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+      <mat-icon>account_circle</mat-icon>
+      <div class="user-text">
+        <div class="full-name">{{ store.user()?.name }} {{ store.user()?.familyName }}</div>
+      </div>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </mat-menu>
+  </ng-container>
 </mat-toolbar>
 
 <div class="content-container">
