@@ -4,17 +4,26 @@ import { Test } from './test/test';
 import { Login } from './login/login';
 import { AuthGuard } from './guards/auth-guard';
 import { GuestGuard } from './guards/guest-guard';
+import { AuthLayout } from './auth-layout/auth-layout';
+import { Home } from './home/home';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
-    pathMatch: 'full',
-  },
-  {
-    path: 'test',
-    component: Test,
-    canActivate: [AuthGuard]
+    component: AuthLayout,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        component: Home,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'test',
+        component: Test,
+        canActivate: [AuthGuard]
+      },
+    ]
   },
   {
     path: 'login',

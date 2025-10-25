@@ -47,7 +47,7 @@ export class Login implements OnInit {
     const result = await this.store.auth.login(this.loginForm.value.username, this.loginForm.value.password);
 
     if (result === true) {
-      this.router.navigate(['/test']);
+      this.router.navigate(['/']);
       return;
     }
 

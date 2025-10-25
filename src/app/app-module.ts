@@ -22,6 +22,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarErrorComponent } from './shared/snackbar-error/snackbar-error';
 import { SnackbarSuccessComponent } from './shared/snackbar-success/snackbar-success';
 import { appHeadersInterceptor } from './core/http/headers.interceptor';
+import { AuthLayout } from './auth-layout/auth-layout';
+import { Home } from './home/home';
 
 
 
@@ -32,7 +34,9 @@ import { appHeadersInterceptor } from './core/http/headers.interceptor';
     Login,
     Spinner,
     SnackbarErrorComponent,
-    SnackbarSuccessComponent
+    SnackbarSuccessComponent,
+    AuthLayout,
+    Home
   ],
   imports: [
     BrowserModule,

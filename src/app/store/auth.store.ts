@@ -3,6 +3,7 @@ import { Token } from '../login/token';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ApiErrorHandlerService, ApiErrorResult } from '../core/http/api-error-handler.service';
+import { decodeJwt } from '../core/jwt/decodeJwt';
 
 @Injectable({ providedIn: 'root' })
 
@@ -32,6 +33,23 @@ export class AuthStore {
 
     // derived/computed signals
     readonly isLoggedIn = computed(() => !!this._accessToken());
+
+    // user information from access_token
+    readonly user = computed(() => {
+        const token = this._accessToken();
+        if (!token) return null;
+        try {
+            const payload: any = decodeJwt(token);
+            return {
+                username: payload.preferred_username,
+                name: payload.given_name,
+                familyName: payload.family_name,
+                email: payload.email
+            }
+        } catch {
+            return null;
+        }
+    });
 
     // setters
     setToken(token: Token | null = null) {
@@ -92,7 +110,8 @@ export class AuthStore {
     }
 
     reset() {
-        this.setToken();
+        console.log('logout');
+        // this.setToken();
     }
 
     async login(username: string, password: string): Promise<true | ApiErrorResult | false> {
