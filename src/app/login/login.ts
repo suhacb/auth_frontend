@@ -7,6 +7,7 @@ import { SnackbarSuccessComponent } from '../shared/snackbar-success/snackbar-su
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { AppStore } from '../store/app.store';
 import { Token } from './token';
+import { applyValidationErrors } from '../core/http/form-error-helper';
 
 
 @Component({
@@ -43,48 +44,16 @@ export class Login implements OnInit {
   }
 
   async onSubmit() {
-    try {
-      await this.store.auth.login(this.loginForm.value.username, this.loginForm.value.password);
-      this.router.navigate(['/test']);
-    } catch (err: unknown) {
-      // Narrow the type
-      if (err instanceof HttpErrorResponse) {
-        console.error(err);
-        this.handleApiErrors(err);
-        if (err.status >= 400 && err.status < 500) {
-          // assuming backend sends { "username": "Error message" }
-          return;
-        }
-      } else {
-        console.error('Unexpected error', err);
-      }
-    }
-}
+    const result = await this.store.auth.login(this.loginForm.value.username, this.loginForm.value.password);
 
-  handleApiErrors(errors: HttpErrorResponse) {
-    let errorMessages:{
-      username ?: string,
-      password ?: string
-    };
-    // Handle 401 and 422
-    if (errors.status === 422 || errors.status === 401) {
-      errorMessages = errors.error.errors;
-      if (errorMessages?.username) {
-        this.loginForm.get('username')?.setErrors({ server: errors.error.errors?.username });
-      }
-      if (errorMessages?.password) {
-        this.loginForm.get('password')?.setErrors({ server: errors.error.errors?.password });
-      }
-    } else {
-      console.info(errors);
-      let message: string = 'Server-side error ' + errors.status + ': ' + errors.error?.error;
-      this.snackbar.openFromComponent(SnackbarErrorComponent, {
-        data: { message },
-        duration: 10000, // optional auto-dismiss
-        horizontalPosition: 'right',
-        verticalPosition: 'bottom',
-        panelClass: ['snackbar-error']
-      });
+    if (result === true) {
+      this.router.navigate(['/test']);
+      return;
+    }
+
+    if (result && typeof result === 'object' && result.validationErrors) {
+      applyValidationErrors(this.loginForm, result.validationErrors);
     }
   }
+
 }

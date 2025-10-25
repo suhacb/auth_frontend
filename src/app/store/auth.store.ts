@@ -1,14 +1,13 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Token } from '../login/token';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { ApiErrorHandlerService, ApiErrorResult } from '../core/http/api-error-handler.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class AuthStore {
-    private http = inject(HttpClient);
-    private router = inject(Router);
+    constructor(private http: HttpClient, private apiErrorHandler: ApiErrorHandlerService) {}
 
     private _accessToken = signal<string | null>(null);
     private _tokenType = signal<string | null>(null);
@@ -87,19 +86,23 @@ export class AuthStore {
         this.setToken();
     }
 
-    login(username: string, password: string): Promise<HttpResponse<any>> {
+    async login(username: string, password: string): Promise<true | ApiErrorResult | false> {
         const url = 'http://localhost:9025/api/auth/login';
         const body = {username, password};
 
-        const request$ = this.http.post(url, body, { observe: 'response' });
+        try {
+            const response = await firstValueFrom(
+                this.http.post(url, body, { observe: 'response' })
+            );
 
-        return firstValueFrom(request$)
-            .then(response => {
-                this.setToken(new Token(response.body));
-                return response;
-            })
-            .catch((error: HttpResponse<any>) => {
-                throw error;
-            })
+            this.setToken(new Token(response.body));
+            return true;
+        } catch (error) {
+            if (error instanceof HttpErrorResponse) {
+                return this.apiErrorHandler.handle(error);
+            }
+            console.error('Unexpected error: ' + error);
+            return false;
+        }
     }
 }
