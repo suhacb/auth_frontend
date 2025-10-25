@@ -109,9 +109,8 @@ export class AuthStore {
         this._sessionState.set(sessionState);
     }
 
-    reset() {
-        console.log('logout');
-        // this.setToken();
+    resetToken() {
+        this.setToken();
     }
 
     async login(username: string, password: string): Promise<true | ApiErrorResult | false> {
@@ -124,6 +123,27 @@ export class AuthStore {
             );
             const token = new Token(response.body);
             this.setToken(token);
+            return true;
+        } catch (error) {
+            if (error instanceof HttpErrorResponse) {
+                return this.apiErrorHandler.handle(error);
+            }
+            console.error('Unexpected error: ' + error);
+            return false;
+        }
+    }
+
+    async logout(): Promise<true | ApiErrorResult | false> {
+        const url = 'http://localhost:9025/api/auth/logout';
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.accessToken()}`,
+            'Content-Type': 'application/json'
+        });
+        try {
+            const response = await firstValueFrom(
+                this.http.post(url, [], {headers, observe: 'response'})
+            );
+            this.resetToken();
             return true;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {

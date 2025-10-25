@@ -11,7 +11,7 @@ export class GuestGuard implements CanActivate {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
       // Clear all tokens
-      this.authStore.reset();
+      this.authStore.resetToken();
       return true; // allow access to login
     }
 

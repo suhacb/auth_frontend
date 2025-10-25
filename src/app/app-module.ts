@@ -2,6 +2,7 @@ import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { SpinnerInterceptor } from './shared/spinner/spinner.interceptor';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -24,8 +25,9 @@ import { SnackbarSuccessComponent } from './shared/snackbar-success/snackbar-suc
 import { appHeadersInterceptor } from './core/http/headers.interceptor';
 import { AuthLayout } from './auth-layout/auth-layout';
 import { Home } from './home/home';
-
-
+import { LogoutModal } from './modals/logout-modal/logout-modal';
+// Material modules
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -36,10 +38,12 @@ import { Home } from './home/home';
     SnackbarErrorComponent,
     SnackbarSuccessComponent,
     AuthLayout,
-    Home
+    Home,
+    LogoutModal
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     MatToolbarModule,
     MatButtonModule,
@@ -51,7 +55,8 @@ import { Home } from './home/home';
     ReactiveFormsModule,
     HttpClientModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
