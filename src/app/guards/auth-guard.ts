@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AppStore } from '../store/app.store';
 
 @Injectable({
@@ -8,15 +8,21 @@ import { AppStore } from '../store/app.store';
 export class AuthGuard implements CanActivate {
   constructor(private store: AppStore, private router: Router) {}
 
-  canActivate(): boolean {
-    const auth = this.store.auth;
-    // const data = this.store.getData();
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
+    const accessTokenInLocalStorage = localStorage.getItem('access_token');
+    const accessTokenInAuthStore = this.store.auth.accessToken();
 
-    // if (!data) {
-      // Redirect back if no data is stored
-    //  this.router.navigate(['/login']);
-    //   return false;
-    // }
+    // If either is missing → redirect to login
+    if (!accessTokenInLocalStorage || !accessTokenInAuthStore) {
+      this.store.auth.setToken();
+      return this.router.parseUrl('/login');
+    }
+
+    // If tokens don't match → redirect to login
+    if (accessTokenInLocalStorage !== accessTokenInAuthStore) {
+      this.store.auth.setToken();
+      return this.router.parseUrl('/login');
+    }
 
     return true;
   }
