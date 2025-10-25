@@ -36,12 +36,12 @@ export class ApiErrorHandlerService {
         }
 
         if (error.status === 403) {
-            this.showError(`Server error ${error.status}. Forbidden.`);
+            this.showError(`Error ${error.status}: Forbidden.`);
             return false;
         }
 
         if (error.status === 401) {
-            this.showError(`Server error ${error.status}. Unauthorized.`);
+            this.showError(`Error ${error.status}: Unauthorized.`);
             return {
                 ok: false,
                 status: error.status,

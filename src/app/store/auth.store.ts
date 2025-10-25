@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Token } from '../login/token';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ApiErrorHandlerService, ApiErrorResult } from '../core/http/api-error-handler.service';
 
@@ -103,12 +103,33 @@ export class AuthStore {
             const response = await firstValueFrom(
                 this.http.post(url, body, { observe: 'response' })
             );
-
-            this.setToken(new Token(response.body));
+            const token = new Token(response.body);
+            this.setToken(token);
             return true;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
                 return this.apiErrorHandler.handle(error);
+            }
+            console.error('Unexpected error: ' + error);
+            return false;
+        }
+    }
+
+    async validateAccessToken(): Promise<boolean | ApiErrorResult> {
+        const url = 'http://localhost:9025/api/auth/validate-access-token';
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${this.accessToken()}`,
+        });
+
+        try {
+            const response = await firstValueFrom(
+                this.http.get(url, {headers})
+            );
+            return true;
+        } catch (error) {
+            if (error instanceof HttpErrorResponse) {
+                this.apiErrorHandler.handle(error);
+                return false;
             }
             console.error('Unexpected error: ' + error);
             return false;
