@@ -47,39 +47,48 @@ export class AuthStore {
     }
 
     setAccessToken(token: string | null = null) {
-    this._accessToken.set(token);
+        this.setLocalStorage('access_token', token);
+        this._accessToken.set(token);
     }
 
     setTokenType(tokenType: string | null) {
-    this._tokenType.set(tokenType)
+        this.setLocalStorage('token_type', tokenType);
+        this._tokenType.set(tokenType)
     }
 
     setExpiresIn(expiresIn: number | null) {
-    this._expiresIn.set(expiresIn)
+        this.setLocalStorage('expires_in', expiresIn);
+        this._expiresIn.set(expiresIn)
     }
 
     setRefreshToken(refreshToken: string | null) {
-    this._refreshToken.set(refreshToken);
+        this.setLocalStorage('refresh_token', refreshToken);
+        this._refreshToken.set(refreshToken);
     }
 
     setRefreshExpiresIn(refreshExpiresIn: number | null) {
-    this._refreshExpiresIn.set(refreshExpiresIn);
+        this.setLocalStorage('refresh_expires_in', refreshExpiresIn);
+        this._refreshExpiresIn.set(refreshExpiresIn);
     }
 
     setScope(scope: string | null) {
-    this._scope.set(scope);
+        this.setLocalStorage('scope', scope);
+        this._scope.set(scope);
     }
 
     setIdToken(idToken: string | null) {
-    this._idToken.set(idToken);
+        this.setLocalStorage('id_token', idToken);
+        this._idToken.set(idToken);
     }
 
     setNotBeforePolicy(notBeforePolicy: string | null) {
-    this._notBeforePolicy.set(notBeforePolicy);
+        this.setLocalStorage('not_before_policy', notBeforePolicy);
+        this._notBeforePolicy.set(notBeforePolicy);
     }
 
     setSessionState(sessionState: string | null) {
-    this._sessionState.set(sessionState);
+        this.setLocalStorage('session_state', sessionState);
+        this._sessionState.set(sessionState);
     }
 
     reset() {
@@ -103,6 +112,15 @@ export class AuthStore {
             }
             console.error('Unexpected error: ' + error);
             return false;
+        }
+    }
+
+    private setLocalStorage(key: string, value: string | number | null): void {
+        if (value !== null && value !== undefined) {
+            const stringValue = typeof value === 'number' ? value.toString() : value;
+            localStorage.setItem(key, stringValue);
+        } else {
+            localStorage.removeItem(key);
         }
     }
 }

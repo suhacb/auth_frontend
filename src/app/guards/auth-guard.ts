@@ -10,7 +10,6 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean {
     const auth = this.store.auth;
-    console.log(auth.accessToken());
     // const data = this.store.getData();
 
     // if (!data) {
