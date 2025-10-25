@@ -3,12 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { Test } from './test/test';
 import { Login } from './login/login';
 import { AuthGuard } from './guards/auth-guard';
+import { GuestGuard } from './guards/guest-guard';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'test',
@@ -17,7 +18,8 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: Login
+    component: Login,
+    canActivate: [GuestGuard]
   },
 ];
 
