@@ -34,6 +34,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { Index } from './components/applications/index/index';
 import { Show } from './components/applications/show/show';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -69,6 +71,8 @@ import { Show } from './components/applications/show/show';
     MatDialogModule,
     MatSidenavModule,
     MatListModule,
+    MatGridListModule,
+    MatTableModule
 ],
   providers: [
     provideBrowserGlobalErrorListeners(),

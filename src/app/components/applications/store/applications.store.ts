@@ -16,9 +16,11 @@ export class ApplicationStore {
     ) {}
 
     private _index = signal<Application[]>([]);
+    private _show = signal<Application | null>(null);
 
     // expose readonly signals
     readonly index = this._index.asReadonly();
+    readonly show = this._show.asReadonly();
 
     // derived/computed signals
     // readonly isLoggedIn = computed(() => !!this._accessToken());
@@ -40,6 +42,27 @@ export class ApplicationStore {
             const applications = response.body ?? [];
             this.setIndex(applications);
             this.apiSuccessHandler.handle(response, 'Applications index loaded successfully.');
+            return true;
+        } catch (error) {
+            if (error instanceof HttpErrorResponse) {
+                return this.apiErrorHandler.handle(error);
+            }
+            console.error('Unexpected error: ' + error);
+            return false;
+        }
+    }
+
+    async getApplication(id: number): Promise<ApiErrorResult | boolean> {
+        const url = 'http://localhost:9025/api/applications/' + id;
+        try {
+            const response = await firstValueFrom(
+                this.http.get<ApplicationResponseContract>(url, {observe: 'response'})
+            );
+            if (response.body) {
+                const application = new Application(response.body);
+                this._show.set(application);
+                return true;
+            }
             return true;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {

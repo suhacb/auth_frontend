@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ApplicationStore } from '../store/applications.store';
 
 @Component({
   selector: 'app-show',
@@ -8,10 +9,12 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './show.scss'
 })
 export class Show implements OnInit {
-  applicationId: string | null = null;
+  applicationId: number;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, public store: ApplicationStore) {
+    this.applicationId = parseInt(this.route.snapshot.paramMap.get('id') ?? '0');
+  }
   ngOnInit(): void {
-    this.applicationId = this.route.snapshot.paramMap.get('id');
+    this.store.getApplication(this.applicationId);
   }
 }

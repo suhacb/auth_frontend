@@ -41,3 +41,34 @@ html, body {
   box-shadow: none !important;
   color: #fff !important;
 }
+
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // ensures actions are pushed to the right
+  padding: 0.5rem 1rem;
+
+  .list-row-flex {
+    display: flex;
+    width: 100%;
+    justify-content: space-between; // pushes actions to the right
+    align-items: center;
+  }
+
+  .list-row-content {
+    display: flex;
+    gap: 1.5rem;
+    flex: 1; // expands to take all available horizontal space
+  }
+
+  .list-row-actions {
+    display: flex;
+    gap: 0.5rem; // spacing between buttons
+    flex-shrink: 0; // prevent shrinking
+  }
+
+  &:hover {
+    background-color: rgba(0,0,0,0.04); // Gmail-like hover
+    cursor: pointer;
+  }
+}
