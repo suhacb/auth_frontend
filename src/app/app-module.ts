@@ -32,6 +32,8 @@ import { Applications } from './components/applications/applications';
 import { MainMenu } from './auth-layout/main-menu/main-menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { Index } from './components/applications/index/index';
+import { Show } from './components/applications/show/show';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { MatListModule } from '@angular/material/list';
     Home,
     LogoutModal,
     Applications,
-    MainMenu
+    MainMenu,
+    Index,
+    Show
   ],
   imports: [
     BrowserModule,

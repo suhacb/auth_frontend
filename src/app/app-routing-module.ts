@@ -7,6 +7,8 @@ import { GuestGuard } from './guards/guest-guard';
 import { AuthLayout } from './auth-layout/auth-layout';
 import { Home } from './home/home';
 import { Applications } from './components/applications/applications';
+import { Index } from './components/applications/index';
+import { Show } from './components/applications/show/show';
 
 const routes: Routes = [
   {
@@ -27,7 +29,20 @@ const routes: Routes = [
       {
         path: 'applications',
         component: Applications,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            component: Index,
+            canActivate: [AuthGuard]
+          },
+          {
+            path: ':id',
+            component: Show,
+            canActivate: [AuthGuard]
+          },
+
+        ]
       },
     ]
   },
