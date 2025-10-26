@@ -1,0 +1,38 @@
+<mat-sidenav-container>
+  <mat-sidenav  #sidenav mode="over">
+    <app-main-menu (logoutClicked)="openLogoutModal()" (menuItemClicked)="sidenav.close()"></app-main-menu>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="toggleMainMenuSidebar()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    
+      <span>My App</span>
+      <span class="spacer"></span>
+    
+      <!-- Example nav items -->
+      <button mat-button routerLink="/">Home</button>
+      <button mat-button routerLink="/applications">Applications</button>
+      <button mat-button routerLink="/test">Test</button>
+      <ng-container>
+        <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+          <mat-icon>account_circle</mat-icon>
+          <div class="user-text">
+            <div class="full-name">{{ store.user()?.name }} {{ store.user()?.familyName }}</div>
+          </div>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item (click)="openLogoutModal()">
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
+        </mat-menu>
+      </ng-container>
+    </mat-toolbar>
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

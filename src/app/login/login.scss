@@ -1,0 +1,21 @@
+.login-container {
+  display: flex;
+  justify-content: center;  /* horizontal centering */
+  align-items: center;      /* vertical centering */
+  height: 100vh;            /* 100% of viewport height */
+}
+
+.login-card {
+  width: 450px;
+  max-width: 90%;
+  padding: 20px;
+}
+.login-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 10px;
+}

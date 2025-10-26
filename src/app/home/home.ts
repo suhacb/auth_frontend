@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { AppStore } from '../store/app.store';
 
 @Component({
-  selector: 'app-test',
-  templateUrl: './test.html',
-  styleUrl: './test.scss',
-  standalone: false
+  selector: 'app-home',
+  standalone: false,
+  templateUrl: './home.html',
+  styleUrl: './home.scss'
 })
-export class Test {
+export class Home {
   constructor(public store: AppStore) {}
-
 }

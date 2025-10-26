@@ -1,39 +1,4 @@
 <main class="app-content">
-  <mat-toolbar>
-    <button matIconButton [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item [routerLink]="'/'">
-        <mat-icon>home</mat-icon>
-        <span>Home</span>
-      </button>
-      <button mat-menu-item [routerLink]="'/test'">
-        <mat-icon>science</mat-icon>
-        <span>Test</span>
-      </button>
-      <button mat-menu-item [routerLink]="'/'">
-        <mat-icon>login</mat-icon>
-        <span>Login</span>
-      </button>
-      <button mat-menu-item [routerLink]="'/test'">
-        <mat-icon>person_add</mat-icon>
-        <span>Sign up</span>
-      </button>
-      <button mat-menu-item [routerLink]="'/'">
-        <mat-icon>lock_reset</mat-icon>
-        <span>Forgot password</span>
-      </button>
-    </mat-menu>
-    <span>Nutrients</span>
-    <span class="example-spacer"></span>
-    <button matIconButton class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
-    </button>
-    <button matIconButton class="example-icon" aria-label="Example icon-button with share icon">
-      <mat-icon>share</mat-icon>
-    </button>
-  </mat-toolbar>
-
+  <app-spinner></app-spinner>
   <router-outlet></router-outlet>
 </main>
