@@ -28,6 +28,7 @@ import { Home } from './home/home';
 import { LogoutModal } from './modals/logout-modal/logout-modal';
 // Material modules
 import { MatDialogModule } from '@angular/material/dialog';
+import { Applications } from './components/applications/applications';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     SnackbarSuccessComponent,
     AuthLayout,
     Home,
-    LogoutModal
+    LogoutModal,
+    Applications
   ],
   imports: [
     BrowserModule,

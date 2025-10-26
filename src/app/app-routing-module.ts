@@ -6,6 +6,7 @@ import { AuthGuard } from './guards/auth-guard';
 import { GuestGuard } from './guards/guest-guard';
 import { AuthLayout } from './auth-layout/auth-layout';
 import { Home } from './home/home';
+import { Applications } from './components/applications/applications';
 
 const routes: Routes = [
   {
@@ -21,6 +22,11 @@ const routes: Routes = [
       {
         path: 'test',
         component: Test,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'applications',
+        component: Applications,
         canActivate: [AuthGuard]
       },
     ]
