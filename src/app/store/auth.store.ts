@@ -4,11 +4,12 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { firstValueFrom } from 'rxjs';
 import { ApiErrorHandlerService, ApiErrorResult } from '../core/http/api-error-handler.service';
 import { decodeJwt } from '../core/jwt/decodeJwt';
+import { ApiSuccessHandlerService } from '../core/http/api-success-handler.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class AuthStore {
-    constructor(private http: HttpClient, private apiErrorHandler: ApiErrorHandlerService) {}
+    constructor(private http: HttpClient, private apiErrorHandler: ApiErrorHandlerService, private apiSuccessHandler: ApiSuccessHandlerService) {}
 
     private _accessToken = signal<string | null>(null);
     private _tokenType = signal<string | null>(null);
@@ -123,6 +124,7 @@ export class AuthStore {
             );
             const token = new Token(response.body);
             this.setToken(token);
+            this.apiSuccessHandler.handle(response, 'Login successful.');
             return true;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
@@ -142,6 +144,7 @@ export class AuthStore {
                 this.http.post(url, [], {observe: 'response'})
             );
             this.resetToken();
+            this.apiSuccessHandler.handle(response, 'You are signed out.');
             return true;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {

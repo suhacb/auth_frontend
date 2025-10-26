@@ -11,3 +11,33 @@ html, body {
 * {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+/* Remove background and border from all snackbars */
+.mat-mdc-snackbar .mat-mdc-snackbar-surface {
+  background-color: transparent !important; /* transparent background */
+  box-shadow: none !important;              /* remove elevation shadow */
+  border: none !important;                  /* remove any border */
+  color: var(--md-sys-color-on-surface);    /* use system text color */
+  font: var(--md-sys-typescale-body-medium);
+}
+
+/* Optional: adjust padding if needed */
+.mat-mdc-snackbar .mat-mdc-snackbar-label {
+  padding: 0.5em 1em;
+}
+
+/* Error snackbar */
+.snackbar-error .mat-mdc-snackbar-surface {
+  /* outer container */
+  background: transparent !important; /* make outer container transparent */
+  box-shadow: none !important;
+  color: #fff !important;
+}
+
+/* Success snackbar */
+.snackbar-success .mat-mdc-snackbar-surface {
+  /* outer container */
+  background: transparent !important; /* make outer container transparent */
+  box-shadow: none !important;
+  color: #fff !important;
+}
