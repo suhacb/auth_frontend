@@ -49,6 +49,14 @@ export class ApiErrorHandlerService {
             };
         }
 
+        if (error.status === 404) {
+            this.showError(`Error ${error.status}: Resource not found.`);
+            return {
+                ok: false,
+                status: error.status,
+            };
+        }
+
         if (error.status >= 400 && error.status < 500) {
             this.showError(error.error?.message || `Request failed (${error.status})`);
             return false;

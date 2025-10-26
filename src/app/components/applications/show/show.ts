@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationStore } from '../store/applications.store';
+import { Application } from '../models/application';
 
 @Component({
   selector: 'app-show',
@@ -11,10 +12,15 @@ import { ApplicationStore } from '../store/applications.store';
 export class Show implements OnInit {
   applicationId: number;
 
-  constructor(private route: ActivatedRoute, public store: ApplicationStore) {
+  constructor(private route: ActivatedRoute, public store: ApplicationStore, private router: Router) {
     this.applicationId = parseInt(this.route.snapshot.paramMap.get('id') ?? '0');
   }
-  ngOnInit(): void {
-    this.store.getApplication(this.applicationId);
+
+  async ngOnInit(): Promise<void> {
+    this.store.setShow();
+    const app = await this.store.getApplication(this.applicationId);
+    if (!this.store.show()) {
+        this.router.navigate(['/applications']);
+    }
   }
 }

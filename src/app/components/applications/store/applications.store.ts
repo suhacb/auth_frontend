@@ -32,6 +32,10 @@ export class ApplicationStore {
         this._index.set(apps);
     }
 
+    setShow(application: Application | null = null):void {
+        this._show.set(application);
+    }
+
     async getIndex(): Promise<ApiErrorResult | boolean> {
         const url = 'http://localhost:9025/api/applications';
 
@@ -61,6 +65,7 @@ export class ApplicationStore {
             if (response.body) {
                 const application = new Application(response.body);
                 this._show.set(application);
+                this.apiSuccessHandler.handle(response, 'Application loaded successfully.');
                 return true;
             }
             return true;
