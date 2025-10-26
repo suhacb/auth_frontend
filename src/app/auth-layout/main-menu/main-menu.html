@@ -1,0 +1,16 @@
+<mat-sidenav #sidenav mode="push" class="main-sidenav">
+  <div class="menu-header">
+    <!--
+    <button mat-icon-button (click)="togglePin()">
+      <mat-icon>{{ pinned ? 'push_pin' : 'push_pin_outlined' }}</mat-icon>
+    </button>
+    -->
+    <span>Navigation</span>
+  </div>
+
+  <mat-nav-list>
+    <a mat-list-item routerLink="/">Home</a>
+    <a mat-list-item routerLink="/applications">Applications</a>
+    <a mat-list-item routerLink="/test">Test</a>
+  </mat-nav-list>
+</mat-sidenav>

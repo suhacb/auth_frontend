@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ViewChild } from '@angular/core';
 import { AuthStore } from '../store/auth.store';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { LogoutModal } from '../modals/logout-modal/logout-modal';
+import { MainMenu } from './main-menu/main-menu';
 
 @Component({
   selector: 'app-auth-layout',
@@ -13,7 +14,13 @@ import { LogoutModal } from '../modals/logout-modal/logout-modal';
 export class AuthLayout {
   public showLogoutModal = false;
 
-  constructor(public store: AuthStore, private router: Router, private dialog: MatDialog) {}
+  constructor(
+    public store: AuthStore,
+    private router: Router,
+    private dialog: MatDialog,
+  ) {}
+
+  @ViewChild(MainMenu) menu!: MainMenu;
 
   openLogoutModal() {
     this.dialog.open(LogoutModal, {
@@ -23,6 +30,12 @@ export class AuthLayout {
   }
 
   closeLogoutModal() { this.showLogoutModal = false; }
+
+  openMainMenuSidebar() {}
+  closeMainMenuSidebar() {}
+  toggleMainMenuSidebar() {
+    this.menu.toggle();
+  }
 
   async logout() {
     try {

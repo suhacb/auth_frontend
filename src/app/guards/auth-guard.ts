@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AppStore } from '../store/app.store';
-import { ApiErrorResult } from '../core/http/api-error-handler.service';
 import { Token } from '../login/token';
 
 @Injectable({

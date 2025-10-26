@@ -29,6 +29,9 @@ import { LogoutModal } from './modals/logout-modal/logout-modal';
 // Material modules
 import { MatDialogModule } from '@angular/material/dialog';
 import { Applications } from './components/applications/applications';
+import { MainMenu } from './auth-layout/main-menu/main-menu';
+import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
+import { MatNavList } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,8 @@ import { Applications } from './components/applications/applications';
     AuthLayout,
     Home,
     LogoutModal,
-    Applications
+    Applications,
+    MainMenu
   ],
   imports: [
     BrowserModule,
@@ -58,8 +62,11 @@ import { Applications } from './components/applications/applications';
     HttpClientModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatDialogModule
-  ],
+    MatDialogModule,
+    MatSidenav,
+    MatNavList,
+    MatSidenavContainer
+],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(

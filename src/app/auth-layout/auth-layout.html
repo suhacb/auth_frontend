@@ -1,4 +1,8 @@
 <mat-toolbar color="primary">
+  <button mat-icon-button (click)="toggleMainMenuSidebar()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
   <span>My App</span>
   <span class="spacer"></span>
 
@@ -22,7 +26,10 @@
     </mat-menu>
   </ng-container>
 </mat-toolbar>
+<mat-sidenav-container>
+  <app-main-menu></app-main-menu>
+  <div class="content-container">
+    <router-outlet></router-outlet>
+  </div>
+</mat-sidenav-container>
 
-<div class="content-container">
-  <router-outlet></router-outlet>
-</div>
