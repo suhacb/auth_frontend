@@ -135,13 +135,11 @@ export class AuthStore {
 
     async logout(): Promise<true | ApiErrorResult | false> {
         const url = 'http://localhost:9025/api/auth/logout';
-        const headers = new HttpHeaders({
-            Authorization: `Bearer ${this.accessToken()}`,
-            'Content-Type': 'application/json'
-        });
+
         try {
             const response = await firstValueFrom(
-                this.http.post(url, [], {headers, observe: 'response'})
+                // this.http.post(url, [], {headers, observe: 'response'})
+                this.http.post(url, [], {observe: 'response'})
             );
             this.resetToken();
             return true;
@@ -154,16 +152,21 @@ export class AuthStore {
         }
     }
 
-    async validateAccessToken(): Promise<boolean | ApiErrorResult> {
+    async validateAccessToken(): Promise<boolean | ApiErrorResult | Token> {
         const url = 'http://localhost:9025/api/auth/validate-access-token';
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.accessToken()}`,
-        });
 
         try {
             const response = await firstValueFrom(
-                this.http.get(url, {headers})
+                this.http.get(url)
             );
+
+            // Attempt to wrap in AccessToken and set token in store/localStorage
+            if ('access_token' in response) {
+                const token = new Token(response);
+                this.setToken(token);
+                return token;
+            }
+            
             return true;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {

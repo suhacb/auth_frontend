@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AppStore } from '../store/app.store';
 import { ApiErrorResult } from '../core/http/api-error-handler.service';
+import { Token } from '../login/token';
 
 @Injectable({
   providedIn: 'root'
@@ -46,12 +47,16 @@ export class AuthGuard implements CanActivate {
     }
 
     // As frontend tokens seem to be OK, we ask the backend if token is valid.
-    const accessTokenIsValid = await this.store.auth.validateAccessToken();
-for (const [key, value] of Object.entries(accessTokenIsValid)) {
-  console.log(`${key}:`, value);
-}
+    const result = await this.store.auth.validateAccessToken();
+    // for (const [key, value] of Object.entries(result)) {
+    //   console.log(`${key}:`, value);
+    // }
 
-    if (accessTokenIsValid === true) {
+    if (result === true) {
+      return true;
+    }
+
+    if (result instanceof Token) {
       return true;
     }
 
