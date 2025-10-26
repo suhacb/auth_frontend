@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
@@ -9,9 +9,18 @@ import { MatSidenav } from '@angular/material/sidenav';
 })
 export class MainMenu {
   @ViewChild('sidenav') sidenav!: MatSidenav;
+  @Output() logoutClicked = new EventEmitter<void>();
+  @Output() menuItemClicked = new EventEmitter<void>();
+
+  onItemClick() {
+    this.menuItemClicked.emit();
+  }
 
   toggle() {
     this.sidenav.toggle();
   }
 
+  triggerLogout() {
+    this.logoutClicked.emit();
+  }
 }

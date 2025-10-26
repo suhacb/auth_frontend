@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { LogoutModal } from '../modals/logout-modal/logout-modal';
 import { MainMenu } from './main-menu/main-menu';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-auth-layout',
@@ -20,21 +21,19 @@ export class AuthLayout {
     private dialog: MatDialog,
   ) {}
 
-  @ViewChild(MainMenu) menu!: MainMenu;
-
   openLogoutModal() {
     this.dialog.open(LogoutModal, {
       width: '400px',
       disableClose: true // user cannot close by clicking outside
     });
   }
+  
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
   closeLogoutModal() { this.showLogoutModal = false; }
 
-  openMainMenuSidebar() {}
-  closeMainMenuSidebar() {}
   toggleMainMenuSidebar() {
-    this.menu.toggle();
+    this.sidenav.toggle();
   }
 
   async logout() {

@@ -1,13 +1,16 @@
 :host {
-  display: flex;
-  flex-direction: column;
+  display: block;
   height: 100vh;
 }
 
+mat-sidenav-container {
+  height: 100%; /* container fills the host */
+}
+
 mat-toolbar {
-  position: sticky;
+  position: sticky; /* optional: keep toolbar on top when scrolling */
   top: 0;
-  z-index: 1000;
+  z-index: 2;
 }
 
 .spacer {
@@ -15,7 +18,8 @@ mat-toolbar {
 }
 
 .content-container {
-  flex: 1 1 auto;
   padding: 16px;
-  overflow-y: auto;
+  background-color: white;
+  min-height: calc(100% - 64px); /* leave space for toolbar */
+  box-sizing: border-box;
 }

@@ -30,8 +30,8 @@ import { LogoutModal } from './modals/logout-modal/logout-modal';
 import { MatDialogModule } from '@angular/material/dialog';
 import { Applications } from './components/applications/applications';
 import { MainMenu } from './auth-layout/main-menu/main-menu';
-import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
-import { MatNavList } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -63,9 +63,8 @@ import { MatNavList } from '@angular/material/list';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatSidenav,
-    MatNavList,
-    MatSidenavContainer
+    MatSidenavModule,
+    MatListModule,
 ],
   providers: [
     provideBrowserGlobalErrorListeners(),
