@@ -36,6 +36,9 @@ import { Index } from './components/applications/index/index';
 import { Show } from './components/applications/show/show';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
+import { ApplicationForm } from './components/applications/show/application-form/application-form';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -51,7 +54,8 @@ import { MatTableModule } from '@angular/material/table';
     Applications,
     MainMenu,
     Index,
-    Show
+    Show,
+    ApplicationForm
   ],
   imports: [
     BrowserModule,
@@ -72,7 +76,9 @@ import { MatTableModule } from '@angular/material/table';
     MatSidenavModule,
     MatListModule,
     MatGridListModule,
-    MatTableModule
+    MatTableModule,
+    MatOptionModule,
+    MatSelectModule
 ],
   providers: [
     provideBrowserGlobalErrorListeners(),

@@ -1,10 +1,10 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { AuthStore } from '../store/auth.store';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { LogoutModal } from '../modals/logout-modal/logout-modal';
-import { MainMenu } from './main-menu/main-menu';
 import { MatSidenav } from '@angular/material/sidenav';
+import { APP_CONFIG } from '../config/app-config';
 
 @Component({
   selector: 'app-auth-layout',
@@ -20,6 +20,8 @@ export class AuthLayout {
     private router: Router,
     private dialog: MatDialog,
   ) {}
+
+  public cfg = inject(APP_CONFIG);
 
   openLogoutModal() {
     this.dialog.open(LogoutModal, {

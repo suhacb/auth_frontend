@@ -1,0 +1,58 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ application?.name }}</mat-card-title>
+    <mat-card-subtitle>{{ application?.description }}</mat-card-subtitle>
+  </mat-card-header>
+  
+  <div class="spacer"></div>
+  
+  <mat-card-content>
+    <form class="app-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Realm</mat-label>
+          <input matInput formControlName="realm" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Client name</mat-label>
+          <input matInput formControlName="clientId" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Grant Type</mat-label>
+          <mat-select formControlName="grantType">
+            <mat-option value="password">Password</mat-option>
+            <mat-option value="authorization_code">Authorization Code</mat-option>
+            <mat-option value="client_credentials">Client Credentials</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>URL</mat-label>
+          <input matInput type="url" formControlName="url" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Callback URL</mat-label>
+          <input matInput type="url" formControlName="callbackUrl" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-span-2 full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="3" formControlName="description"></textarea>
+        </mat-form-field>
+
+        <mat-card-actions align="end">
+          <button mat-stroked-button color="warn" type="button" (click)="onCancel()">Cancel</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+            {{ isEdit ? 'Update' : 'Create' }}
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+  </mat-card>

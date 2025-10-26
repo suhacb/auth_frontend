@@ -1,3 +1,7 @@
-<div>
-    {{ store.show() | json}}
-</div>
+<ng-container *ngIf="store.show()">
+    <app-application-form
+        [application]="store.show()"
+        (save)="store.updateApplication(applicationId)"
+    ></app-application-form>
+</ng-container>
+

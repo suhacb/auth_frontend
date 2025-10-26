@@ -77,4 +77,24 @@ export class ApplicationStore {
             return false;
         }
     }
+
+    async updateApplication(id: number): Promise<ApiErrorResult | boolean> {
+        console.log('update');
+        return false;
+
+//         const url = 'http://localhost:9025/api/applications/' + id;
+//         try {
+//             const response = await firstValueFrom(
+//                 this.http.get(url, {observe: 'response'})
+//             );
+// 
+//             return true;
+//         } catch (error) {
+//             if (error instanceof HttpErrorResponse) {
+//                 return this.apiErrorHandler.handle(error);
+//             }
+//             console.error('Unexpected error: ' + error);
+//             return false;
+//         }
+    }
 }

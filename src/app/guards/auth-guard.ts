@@ -47,9 +47,6 @@ export class AuthGuard implements CanActivate {
 
     // As frontend tokens seem to be OK, we ask the backend if token is valid.
     const result = await this.store.auth.validateAccessToken();
-    // for (const [key, value] of Object.entries(result)) {
-    //   console.log(`${key}:`, value);
-    // }
 
     if (result === true) {
       return true;
