@@ -39,6 +39,7 @@ import { MatTableModule } from '@angular/material/table';
 import { ApplicationForm } from './components/applications/show/application-form/application-form';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { ApplicationIndex } from './components/applications/index/application-index/application-index';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { MatSelectModule } from '@angular/material/select';
     MainMenu,
     Index,
     Show,
-    ApplicationForm
+    ApplicationForm,
+    ApplicationIndex
   ],
   imports: [
     BrowserModule,
