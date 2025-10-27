@@ -40,6 +40,7 @@ import { ApplicationForm } from './components/applications/show/application-form
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ApplicationIndex } from './components/applications/index/application-index/application-index';
+import { ApplicationDeleteModal } from './components/applications/index/application-delete-modal/application-delete-modal';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ApplicationIndex } from './components/applications/index/application-in
     Index,
     Show,
     ApplicationForm,
-    ApplicationIndex
+    ApplicationIndex,
+    ApplicationDeleteModal
   ],
   imports: [
     BrowserModule,

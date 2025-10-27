@@ -10,13 +10,13 @@ import { Application } from '../../models/application';
 export class ApplicationIndex {
   @Input() applications: Application[] = [];
   @Output() onShowEvent = new EventEmitter<number>();
-  @Output() onDeleteEvent = new EventEmitter<number>();
+  @Output() onDeleteEvent = new EventEmitter<Application>();
 
   onShowClick(id: number) {
     this.onShowEvent.emit(id);
   }
 
-  onDeleteClick(id: number) {
-    this.onDeleteEvent.emit(id);
+  onDeleteClick(application: Application) {
+    this.onDeleteEvent.emit(application);
   }
 }

@@ -29,10 +29,10 @@ export class AuthLayout {
       disableClose: true // user cannot close by clicking outside
     });
   }
+  closeLogoutModal() { this.showLogoutModal = false; }
   
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  closeLogoutModal() { this.showLogoutModal = false; }
 
   toggleMainMenuSidebar() {
     this.sidenav.toggle();

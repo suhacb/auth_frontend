@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AuthStore } from '../../store/auth.store';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -19,7 +18,6 @@ export class LogoutModal {
 
   close() {
     this.dialogRef.close();
-    
   }
 
   async confirmLogout() {
