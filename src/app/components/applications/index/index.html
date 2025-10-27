@@ -1,7 +1,32 @@
-<div *ngFor="let application of store.index()">
-    {{ application | json }}
-</div>
+<ng-container *ngIf="store.index().length > 0">
+    <mat-list>
+        <mat-list-item *ngFor="let application of store.index()"  (click)="show(application.id)">
+            <div class="record-container">
+            <!-- Left Section -->
+            <div class="left-section">
+                <span matListItemTitle class="record-title">{{ application.name }}</span>
+                <span matListItemLine class="record-subtitle">{{ application.realm }} | {{ application.clientId }}</span>
+            </div>
 
+            <!-- Center Section -->
+            <div class="center-section">
+                <p matLine class="record-description">{{ application.description }}</p>
+            </div>
+
+            <!-- Right Section -->
+            <div class="right-section">
+                <button mat-icon-button (click)="show(application.id); $event.stopPropagation()"  aria-label="Show">
+                    <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button (click)="delete(application.id); $event.stopPropagation()"  aria-label="Delete">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            </div>
+            <mat-divider></mat-divider>
+        </mat-list-item>
+    </mat-list>
+</ng-container>
 
 
 
