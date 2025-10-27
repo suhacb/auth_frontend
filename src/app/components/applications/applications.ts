@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ApplicationStore } from './store/applications.store';
 
 @Component({
   selector: 'app-applications',
@@ -7,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './applications.scss'
 })
 export class Applications {
+  constructor(private router: Router, public store: ApplicationStore) {}
 
+  isIndexActive(): boolean {
+    return this.router.isActive('/applications', true);
+  }
 }

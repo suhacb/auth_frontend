@@ -1,6 +1,17 @@
+<div>
+    <button
+      mat-button
+      [disabled]="isIndexActive()"
+      [routerLink]="isIndexActive() ? null : '/applications'"
+    >
+      Index
+    </button>
+    <span *ngIf="!isIndexActive()"> | </span>
+    <button *ngIf="!isIndexActive()" mat-button disabled>
+        {{store.show()?.name}}
+    </button>
+</div>
 <h2 mat-headline>Applications</h2>
 <div>
-    <button mat-button routerLink="/applications">Index</button>
-    <button mat-button routerLink="/applications/1">Show</button>
     <router-outlet></router-outlet>
 </div>
