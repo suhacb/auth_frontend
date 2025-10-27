@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButtonModule, MatFabButton, MatMiniFabButton } from '@angular/material/button';
 import { Test } from './test/test';
 import { MatMenuModule } from '@angular/material/menu';
 import { Login } from './login/login';
@@ -82,7 +82,9 @@ import { ApplicationDeleteModal } from './components/applications/index/applicat
     MatGridListModule,
     MatTableModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    MatFabButton,
+    MatMiniFabButton
 ],
   providers: [
     provideBrowserGlobalErrorListeners(),

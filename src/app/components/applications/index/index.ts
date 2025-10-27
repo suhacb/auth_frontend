@@ -45,4 +45,8 @@ export class Index implements OnInit {
        }
     });
   }
+
+  create() {
+    console.log('create');
+  }
 }
