@@ -118,4 +118,24 @@ export class ApplicationStore {
             return false;
         }
     }
+
+    async storeApplication(application: Application): Promise<ApiErrorResult | boolean> {
+        const url = 'http://localhost:9025/api/applications';
+        try {
+            const response = await firstValueFrom(
+                this.http.post<ApplicationResponseContract>(url, application, {observe: 'response'})
+            );
+            if (response.ok) {
+                this.apiSuccessHandler.handle(response, 'Application created successfully.');
+                return true;
+            }
+            return true;
+        } catch (error) {
+            if (error instanceof HttpErrorResponse) {
+                return this.apiErrorHandler.handle(error);
+            }
+            console.error('Unexpected error: ' + error);
+            return false;
+        }
+    }
 }

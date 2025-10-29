@@ -13,14 +13,11 @@ export class ApplicationDeleteModal {
 
   constructor(private dialogRef: MatDialogRef<ApplicationDeleteModal>, @Inject(MAT_DIALOG_DATA) public data: {application: Application}) {}
 
-  @Output() deleteApplicationEvent = new EventEmitter<Application>();
-
   onCloseClick(): void {
     this.dialogRef.close(false);
   }
 
   onDeleteApplicationClick(application: Application): void {
     this.dialogRef.close(application);
-    //this.deleteApplicationEvent.emit(application);
   }
 }

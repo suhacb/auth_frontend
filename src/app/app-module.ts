@@ -36,11 +36,12 @@ import { Index } from './components/applications/index/index';
 import { Show } from './components/applications/show/show';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
-import { ApplicationForm } from './components/applications/show/application-form/application-form';
+import { ApplicationForm } from './components/applications/components/application-form/application-form';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ApplicationIndex } from './components/applications/index/application-index/application-index';
 import { ApplicationDeleteModal } from './components/applications/index/application-delete-modal/application-delete-modal';
+import { ApplicationCreateModal } from './components/applications/components/application-create-modal/application-create-modal';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ApplicationDeleteModal } from './components/applications/index/applicat
     Show,
     ApplicationForm,
     ApplicationIndex,
-    ApplicationDeleteModal
+    ApplicationDeleteModal,
+    ApplicationCreateModal
   ],
   imports: [
     BrowserModule,

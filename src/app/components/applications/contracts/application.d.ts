@@ -1,13 +1,13 @@
 export interface ApplicationContract {
     public callbackUrl: string | null,
-    public clientId: string,
-    public createdAt: Date,
-    public deletedAt: Date,
+    public clientId: string | null,
+    public createdAt: Date | null,
+    public deletedAt: Date | null,
     public description: string | null,
-    public grantType: string,
-    public id: number,
-    public name: string,
-    public realm: string,
-    public updatedAt: Date,
+    public grantType: string | null,
+    public id: number | null,
+    public name: string | null,
+    public realm: string | null,
+    public updatedAt: Date | null,
     public url: string | null
 }

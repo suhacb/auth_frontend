@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApplicationStore } from '../store/applications.store';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationDeleteModal } from './application-delete-modal/application-delete-modal';
 import { Application } from '../models/application';
+import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
 
 @Component({
   selector: 'app-index',
@@ -35,9 +36,27 @@ export class Index implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(async (result: Application | false) => {
-       if (result) {
+       if (result && result.id) {
          // User confirmed deletion — do the deletion in parent
          await this.store.deleteApplication(result.id).then(() => {
+           this.store.getIndex(); // reload applications index
+         }).catch(error => {
+           
+         });
+       }
+    });
+  }
+
+  openApplicationCreateModal() {
+    const dialogRef = this.dialog.open(ApplicationCreateModal, {
+      width: '800px',
+      disableClose: true // user cannot close by clicking outside
+    });
+
+    dialogRef.afterClosed().subscribe(async (result: Application) => {
+       if (result) {
+         // User confirmed create application — do the store in parent
+         await this.store.storeApplication(result).then(() => {
            this.store.getIndex(); // reload applications index
          }).catch(error => {
            

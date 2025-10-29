@@ -41,4 +41,8 @@ export class ApplicationForm implements OnInit {
   onCancel() {
     this.cancel.emit();
   }
+
+  get value() {
+    return this.form.value;
+  }
 }
