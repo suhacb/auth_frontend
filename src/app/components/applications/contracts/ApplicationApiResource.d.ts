@@ -9,5 +9,6 @@ export interface ApplicationApiResource {
     name: string | null,
     realm: string | null,
     updated_at: string | null,
-    url: string | null
+    url: string | null,
+    client_secret?: string | null;
 }

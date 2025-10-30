@@ -12,4 +12,5 @@ export interface ApplicationContract {
     public realm?: string | null;
     public updatedAt?: Date | null;    
     public url?: string | null;
+    public clientSecret?: string | null;
 }

@@ -38,6 +38,7 @@ export class Application implements ApplicationContract {
             realm: api.realm ?? null,
             updatedAt: api.updated_at ? new Date(api.updated_at) : null,
             url: api.url ?? null,
+            clientSecret: api.client_secret ?? undefined
         };
     }
 
@@ -54,6 +55,7 @@ export class Application implements ApplicationContract {
             realm: raw.realm ?? null,
             updated_at: raw.updatedAt?.toDateString() ?? null,
             url: raw.url ?? null,
+            client_secret: raw.clientSecret ?? undefined
         };
     }
 
@@ -69,7 +71,8 @@ export class Application implements ApplicationContract {
             name: null,
             realm: null,
             updated_at: null,
-            url: null
+            url: null,
+            client_secret: undefined,
         };
     }
 
@@ -148,6 +151,14 @@ export class Application implements ApplicationContract {
     
     get url(): string | null {
         return this._rawData.url ?? null;
+    }
+
+    get client_secret(): string | null | undefined {
+        return this._apiData.client_secret;
+    }
+
+    get clientSecret(): string | null | undefined {
+        return this._rawData.clientSecret;
     }
 
     set callback_url(value: string | null) {

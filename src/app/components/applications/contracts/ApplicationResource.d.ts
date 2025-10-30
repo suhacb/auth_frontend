@@ -1,13 +1,14 @@
 export interface ApplicationResource {
-    callbackUrl: string | null,
-    clientId: string | null,
-    createdAt: Date | null,
-    deletedAt: Date | null,
-    description: string | null,
-    grantType: string | null,
-    id: number | null,
-    name: string | null,
-    realm: string | null,
-    updatedAt: Date | null,
-    url: string | null
+    public callbackUrl: string | null,
+    public clientId: string | null,
+    public createdAt: Date | null,
+    public deletedAt: Date | null,
+    public description: string | null,
+    public grantType: string | null,
+    public id: number | null,
+    public name: string | null,
+    public realm: string | null,
+    public updatedAt: Date | null,
+    public url: string | null,
+    public clientSecret?: string | null;
 }
