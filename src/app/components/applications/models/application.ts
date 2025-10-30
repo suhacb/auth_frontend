@@ -1,75 +1,143 @@
 import { ApplicationContract } from "../contracts/application";
 import { ApplicationResponseContract } from "../contracts/application_response";
 
-export class Application implements ApplicationContract {
-    public callbackUrl!: string | null;
-    public clientId!: string | null;
-    public createdAt!: Date | null;
-    public deletedAt!: Date | null;
-    public description!: string | null;
-    public grantType!: string | null;
-    public id!: number | null;
-    public name!: string | null;
-    public realm!: string | null;
-    public updatedAt!: Date | null;
-    public url!: string | null;
-
-    constructor(raw: ApplicationResponseContract | ApplicationContract | null = null) {
-        if (!raw) {
-        this.mapFromNull();
-        return;
+export class Application implements ApplicationContract{
+    private _raw;
+    
+    constructor(raw: ApplicationResponseContract | null = null) {
+        if (raw) {
+            this._raw = raw;
+            return;
         }
-
-        if (this.isApplicationResponse(raw)) {
-            this.mapFromResponse(raw);
-        } else {
-            this.mapFromApplication(raw);
-        }
+        this._raw = this.createRawFromNull();
     }
 
-    private isApplicationResponse(raw: ApplicationResponseContract | ApplicationContract): raw is ApplicationResponseContract {
-        return 'client_id' in raw;
+    private createRawFromNull(): ApplicationResponseContract {
+        return {
+            callback_url: null,
+            client_id: null,
+            created_at: null,
+            deleted_at: null,
+            description: null,
+            grant_type: null,
+            id: null,
+            name: null,
+            realm: null,
+            updated_at: null,
+            url: null
+        };
     }
 
-    private mapFromNull(): void {
-        this.callbackUrl = null;
-        this.clientId = null;
-        this.createdAt = null;
-        this.deletedAt = null;
-        this.description = null;
-        this.grantType = null;
-        this.id = null;
-        this.name = null;
-        this.realm = null;
-        this.updatedAt = null;
-        this.url = null;
+    get callbackUrl(): string | null
+    {
+        return this._raw.callback_url ?? null;
     }
 
-    private mapFromResponse(raw: ApplicationResponseContract): void {
-        this.callbackUrl = raw.callback_url;
-        this.clientId = raw.client_id;
-        this.createdAt = new Date(raw.created_at);
-        this.deletedAt = new Date(raw.deleted_at);
-        this.description = raw.description;
-        this.grantType = raw.grant_type;
-        this.id = Number(raw.id);
-        this.name = raw.name;
-        this.realm = raw.realm;
-        this.updatedAt = new Date(raw.updated_at);
-        this.url = raw.url;
+    get callback_url(): string | null {
+        return this._raw.callback_url ?? null;
+    }
+    
+    get clientId(): string | null {
+        return this._raw.client_id ?? null;
+    }
+    
+    get client_id(): string | null {
+        return this._raw.client_id ?? null;
+    }
+    
+    get createdAt(): Date | null {
+        return this._raw.created_at ? new Date(this._raw.created_at) : null;
+    }
+    
+    get created_at(): string | null {
+        return this._raw.created_at ?? null;
+    }
+    
+    get deletedAt(): Date | null {
+        return this._raw.deleted_at ? new Date(this._raw.deleted_at) : null;
+    }
+    
+    get deleted_at(): string | null {
+        return this._raw.deleted_at ?? null;
+    }
+    
+    get description(): string | null {
+        return this._raw.description ?? null;
+    }
+    
+    get grantType(): string | null {
+        return this._raw.grant_type ?? null;
+    }
+    
+    get grant_type(): string | null {
+        return this._raw.grant_type ?? null;
+    }
+    
+    get id(): number | string | null {
+        return this._raw.id ? Number(this._raw.id) : null;
+    }
+    
+    get name(): string | null {
+        return this._raw.name ?? null;
+    }
+    
+    get realm(): string | null {
+        return this._raw.realm ?? null;
+    }
+    
+    get updatedAt(): Date | null {
+        return this._raw.updated_at ? new Date(this._raw.updated_at) : null;
+    }
+    
+    get updated_at(): string | null {
+        return this._raw.updated_at ?? null;
+    }
+    
+    get url(): string | null {
+        return this._raw.url ?? null;
     }
 
-    private mapFromApplication(raw: ApplicationContract): void {
-        this.callbackUrl = raw.callbackUrl;
-        this.clientId = raw.clientId;
-        this.createdAt = raw.createdAt;
-        this.deletedAt = raw.deletedAt;
-        this.description = raw.description;
-        this.grantType = raw.grantType;
-        this.id = Number(raw.id);
-        this.name = raw.name;
-        this.realm = raw.realm;
-        this.updatedAt = raw.updatedAt;
-        this.url = raw.url;
+    set callback_url(value: string | null) {
+        this._raw.callback_url = value;
+    }
+
+    set client_id(value: string | null) {
+        this._raw.client_id = value;
+    }
+
+    set created_at(value: string | null) {
+        this._raw.created_at = value;
+    }
+
+    set deleted_at(value: string | null) {
+        this._raw.deleted_at = value;
+    }
+
+    set description(value: string | null) {
+        this._raw.description = value;
+    }
+
+    set grant_type(value: string | null) {
+        this._raw.grant_type = value;
+    }
+
+    set id(value: string | number | null) {
+        this._raw.id = value ? String(value) : null;
+    }
+
+    set name(value: string | null) {
+        this._raw.name = value;
+    }
+
+    set realm(value: string | null) {
+        this._raw.realm = value;
+    }
+
+    set updated_at(value: string | null) {
+        this._raw.updated_at = value;
+    }
+
+    set url(value: string | null) {
+        this._raw.url = value;
     }
 }

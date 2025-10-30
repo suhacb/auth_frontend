@@ -1,13 +1,13 @@
 export interface ApplicationResponseContract {
     callback_url: string | null,
-    client_id: string,
-    created_at: Date,
-    deleted_at: Date,
+    client_id: string | null,
+    created_at: string | null,
+    deleted_at: string | null,
     description: string | null,
-    grant_type: string,
-    id: number,
-    name: string,
-    realm: string,
-    updated_at: Date,
+    grant_type: string | null,
+    id: string | null,
+    name: string | null,
+    realm: string | null,
+    updated_at: string | null,
     url: string | null
 }

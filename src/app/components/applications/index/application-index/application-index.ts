@@ -9,11 +9,13 @@ import { Application } from '../../models/application';
 })
 export class ApplicationIndex {
   @Input() applications: Application[] = [];
-  @Output() onShowEvent = new EventEmitter<number>();
+  @Output() onShowEvent = new EventEmitter<string | number | null>();
   @Output() onDeleteEvent = new EventEmitter<Application>();
 
-  onShowClick(id: number) {
-    this.onShowEvent.emit(id);
+  onShowClick(id: string | number | null) {
+    if (id) {
+      this.onShowEvent.emit(id);
+    }
   }
 
   onDeleteClick(application: Application) {

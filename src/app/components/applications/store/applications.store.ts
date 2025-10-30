@@ -98,9 +98,9 @@ export class ApplicationStore {
 //         }
     }
 
-    async deleteApplication(id: number): Promise<ApiErrorResult | boolean>
+    async deleteApplication(id: string | number): Promise<ApiErrorResult | boolean>
     {
-        const url = 'http://localhost:9025/api/applications/' + id;
+        const url = 'http://localhost:9025/api/applications/' + Number(id);
         try {
             const response = await firstValueFrom(
                 this.http.delete<ApplicationResponseContract>(url, {observe: 'response'})

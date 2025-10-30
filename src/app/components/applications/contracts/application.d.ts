@@ -1,13 +1,29 @@
 export interface ApplicationContract {
-    public callbackUrl: string | null,
-    public clientId: string | null,
-    public createdAt: Date | null,
-    public deletedAt: Date | null,
-    public description: string | null,
-    public grantType: string | null,
-    public id: number | null,
-    public name: string | null,
-    public realm: string | null,
-    public updatedAt: Date | null,
-    public url: string | null
+    public readonly callbackUrl: string | null,
+    public readonly callback_url: string | null,
+
+    public readonly clientId: string | null,
+    public readonly client_id: string | null,
+    
+    public readonly createdAt: Date | null,
+    public readonly created_at: string | null,
+    
+    public readonly deletedAt: Date | null,
+    public readonly deleted_at: string | null,
+    
+    public readonly description: string | null,
+    
+    public readonly grantType: string | null,
+    public readonly grant_type: string | null,
+    
+    public readonly id: string | number | null,
+    
+    public readonly name: string | null,
+    
+    public readonly realm: string | null,
+    
+    public readonly updatedAt: Date | null,
+    public readonly updated_at: string | null,
+    
+    public readonly url: string | null
 }
