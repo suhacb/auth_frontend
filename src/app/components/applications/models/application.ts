@@ -1,14 +1,15 @@
-import { ApplicationContract } from "../contracts/application";
-import { ApplicationResponseContract } from "../contracts/application_response";
+import { ApplicationResource } from "../contracts/ApplicationResource";
+import { ApplicationApiResource } from "../contracts/ApplicationApiResource";
+import { ApplicationContract } from "../contracts/ApplicationContract";
 
 interface ApplicationConstructorOptions {
-    apiData?: ApplicationResponseContract;
-    rawData?: ApplicationContract;
+    apiData?: ApplicationApiResource;
+    rawData?: ApplicationResource;
 }
 
-export class Application implements ApplicationContract{
-    private _apiData: ApplicationResponseContract;
-    private _rawData: ApplicationContract;
+export class Application implements ApplicationContract {
+    private _apiData: ApplicationApiResource;
+    private _rawData: ApplicationResource;
     
     constructor(options: ApplicationConstructorOptions = {}) {
         const { apiData, rawData } = options;
@@ -19,12 +20,12 @@ export class Application implements ApplicationContract{
             this._rawData = rawData;
             this._apiData = this.transformRawToApi(rawData);
         } else {
-            this._rawData = this.createApiFromNull();
-            this._apiData = this.transformRawToApi(this._rawData);
+            this._apiData = this.createApiFromNull();
+            this._rawData = this.transformApiToRaw(this._apiData);
         }
     }
 
-    private transformApiToRaw(api: ApplicationResponseContract): ApplicationContract {
+    private transformApiToRaw(api: ApplicationApiResource): ApplicationResource {
         return {
             callbackUrl: api.callback_url ?? null,
             clientId: api.client_id ?? null,
@@ -32,7 +33,7 @@ export class Application implements ApplicationContract{
             deletedAt: api.deleted_at ? new Date(api.deleted_at) : null,
             description: api.description ?? null,
             grantType: api.grant_type ?? null,
-            id: api.id ? String(api.id) : null,
+            id: api.id ? Number(api.id) : null,
             name: api.name ?? null,
             realm: api.realm ?? null,
             updatedAt: api.updated_at ? new Date(api.updated_at) : null,
@@ -40,7 +41,7 @@ export class Application implements ApplicationContract{
         };
     }
 
-    private transformRawToApi(raw: ApplicationContract): ApplicationResponseContract {
+    private transformRawToApi(raw: ApplicationResource): ApplicationApiResource {
         return {
             callback_url: raw.callbackUrl ?? null,
             client_id: raw.clientId ?? null,
@@ -56,7 +57,7 @@ export class Application implements ApplicationContract{
         };
     }
 
-    private createApiFromNull(): ApplicationResponseContract {
+    private createApiFromNull(): ApplicationApiResource {
         return {
             callback_url: null,
             client_id: null,
@@ -72,11 +73,11 @@ export class Application implements ApplicationContract{
         };
     }
 
-    public toApi(): ApplicationResponseContract {
+    public toApi(): ApplicationApiResource {
         return this._apiData;
     }
 
-    public toRaw(): ApplicationContract {
+    public toRaw(): ApplicationResource {
         return this._rawData;
     }
 
@@ -110,7 +111,7 @@ export class Application implements ApplicationContract{
     }
     
     get deleted_at(): string | null {
-        return this._rawData.deleted_at ?? null;
+        return this._apiData.deleted_at ?? null;
     }
     
     get description(): string | null {

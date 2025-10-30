@@ -1,4 +1,4 @@
-export interface ApplicationResponseContract {
+export interface ApplicationApiResource {
     callback_url: string | null,
     client_id: string | null,
     created_at: string | null,

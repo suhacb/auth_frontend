@@ -1,13 +1,13 @@
 <mat-card appearance="outlined">
   <mat-card-header>
-    <mat-card-title>{{ application?.name }}</mat-card-title>
-    <mat-card-subtitle>{{ application?.description }}</mat-card-subtitle>
+    <mat-card-title>{{ application.name }}</mat-card-title>
+    <mat-card-subtitle>{{ application.description }}</mat-card-subtitle>
   </mat-card-header>
   
   <div class="spacer"></div>
   
   <mat-card-content>
-    <form class="app-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form class="app-form" [formGroup]="form">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />
@@ -46,16 +46,6 @@
           <mat-label>Description</mat-label>
           <textarea matInput rows="3" formControlName="description"></textarea>
         </mat-form-field>
-
-        <mat-card-actions align="end">
-          <button mat-stroked-button color="warn" type="button" (click)="onCancel()">Cancel</button>
-          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
-            {{ isEdit ? 'Update' : 'Create' }}
-          </button>
-        </mat-card-actions>
       </form>
-      <div>
-        form: {{ form.value| json }}
-      </div>
     </mat-card-content>
   </mat-card>

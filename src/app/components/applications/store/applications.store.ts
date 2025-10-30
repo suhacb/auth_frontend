@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { ApiSuccessHandlerService } from '../../../core/http/api-success-handler.service';
 import { ApiErrorHandlerService, ApiErrorResult } from '../../../core/http/api-error-handler.service';
 import { Application } from '../models/application';
-import { ApplicationResponseContract } from '../contracts/application_response';
+import { ApplicationApiResource } from '../contracts/ApplicationApiResource';
 
 @Injectable({ providedIn: 'root' })
 
@@ -16,7 +16,7 @@ export class ApplicationStore {
     ) {}
 
     private _index = signal<Application[]>([]);
-    private _show = signal<Application | null>(null);
+    private _show = signal<Application>(new Application);
 
     // expose readonly signals
     readonly index = this._index.asReadonly();
@@ -26,13 +26,13 @@ export class ApplicationStore {
     // readonly isLoggedIn = computed(() => !!this._accessToken());
 
     // setters
-    setIndex(response: ApplicationResponseContract[]) {
+    setIndex(response: ApplicationApiResource[]) {
         this._index.set([]);
         const applications = response.map(application => new Application({apiData: application}));
         this._index.set(applications);
     }
 
-    setShow(application: Application | null = null):void {
+    setShow(application: Application):void {
         this._show.set(application);
     }
 
@@ -41,7 +41,7 @@ export class ApplicationStore {
 
         try {
             const response = await firstValueFrom(
-                this.http.get<ApplicationResponseContract[]>(url, { observe: 'response' })
+                this.http.get<ApplicationApiResource[]>(url, { observe: 'response' })
             );
             const applications = response.body ?? [];
             this.setIndex(applications);
@@ -60,7 +60,7 @@ export class ApplicationStore {
         const url = 'http://localhost:9025/api/applications/' + id;
         try {
             const response = await firstValueFrom(
-                this.http.get<ApplicationResponseContract>(url, {observe: 'response'})
+                this.http.get<ApplicationApiResource>(url, {observe: 'response'})
             );
             if (response.body) {
                 const application = new Application({apiData: response.body});
@@ -103,7 +103,7 @@ export class ApplicationStore {
         const url = 'http://localhost:9025/api/applications/' + Number(id);
         try {
             const response = await firstValueFrom(
-                this.http.delete<ApplicationResponseContract>(url, {observe: 'response'})
+                this.http.delete<ApplicationApiResource>(url, {observe: 'response'})
             );
             if (response.ok) {
                 this.apiSuccessHandler.handle(response, 'Application deleted successfully.');
@@ -123,7 +123,7 @@ export class ApplicationStore {
         const url = 'http://localhost:9025/api/applications';
         try {
             const response = await firstValueFrom(
-                this.http.post<ApplicationResponseContract>(url, application, {observe: 'response'})
+                this.http.post<ApplicationApiResource>(url, application, {observe: 'response'})
             );
             if (response.ok) {
                 this.apiSuccessHandler.handle(response, 'Application created successfully.');

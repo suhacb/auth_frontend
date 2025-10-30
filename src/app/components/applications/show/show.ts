@@ -17,7 +17,7 @@ export class Show implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.store.setShow();
+    this.store.setShow(new Application());
     const app = await this.store.getApplication(this.applicationId);
     if (!this.store.show()) {
         this.router.navigate(['/applications']);

@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Inject, Output, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, Input, Output, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Application } from '../../models/application';
-import { App } from '../../../../app';
 import { ApplicationForm } from '../application-form/application-form';
+import { ApplicationResource } from '../../contracts/ApplicationResource';
 
 @Component({
   selector: 'app-application-create-modal',
@@ -12,7 +12,7 @@ import { ApplicationForm } from '../application-form/application-form';
 })
 export class ApplicationCreateModal {
 
-  public application: Application = new Application();
+  public application: ApplicationResource = new Application().toRaw();
 
   constructor(private dialogRef: MatDialogRef<ApplicationCreateModal>) {}
 
