@@ -1,29 +1,31 @@
-export interface ApplicationContract {
-    public readonly callbackUrl: string | null,
-    public readonly callback_url: string | null,
+import { ApplicationResponseContract } from "./application_response";
 
-    public readonly clientId: string | null,
-    public readonly client_id: string | null,
+export interface ApplicationContract {
+    public callbackUrl?: string | null;
+    public callback_url?: string | null;
+
+    public clientId?: string | null;
+    public client_id?: string | null;
     
-    public readonly createdAt: Date | null,
-    public readonly created_at: string | null,
+    public createdAt?: Date | null;
+    public created_at?: string | null;
     
-    public readonly deletedAt: Date | null,
-    public readonly deleted_at: string | null,
+    public deletedAt?: Date | null;
+    public deleted_at?: string | null;
     
-    public readonly description: string | null,
+    public description?: string | null;
     
-    public readonly grantType: string | null,
-    public readonly grant_type: string | null,
+    public grantType?: string | null;
+    public grant_type?: string | null;
     
-    public readonly id: string | number | null,
+    public id?: string | number | null;
     
-    public readonly name: string | null,
+    public name?: string | null;
     
-    public readonly realm: string | null,
+    public realm?: string | null;
     
-    public readonly updatedAt: Date | null,
-    public readonly updated_at: string | null,
+    public updatedAt?: Date | null;
+    public updated_at?: string | null;
     
-    public readonly url: string | null
+    public url?: string | null;
 }

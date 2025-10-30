@@ -1,18 +1,62 @@
 import { ApplicationContract } from "../contracts/application";
 import { ApplicationResponseContract } from "../contracts/application_response";
 
+interface ApplicationConstructorOptions {
+    apiData?: ApplicationResponseContract;
+    rawData?: ApplicationContract;
+}
+
 export class Application implements ApplicationContract{
-    private _raw;
+    private _apiData: ApplicationResponseContract;
+    private _rawData: ApplicationContract;
     
-    constructor(raw: ApplicationResponseContract | null = null) {
-        if (raw) {
-            this._raw = raw;
-            return;
+    constructor(options: ApplicationConstructorOptions = {}) {
+        const { apiData, rawData } = options;
+        if (apiData) {
+            this._apiData = apiData;
+            this._rawData = this.transformApiToRaw(apiData);
+        } else if (rawData) {
+            this._rawData = rawData;
+            this._apiData = this.transformRawToApi(rawData);
+        } else {
+            this._rawData = this.createApiFromNull();
+            this._apiData = this.transformRawToApi(this._rawData);
         }
-        this._raw = this.createRawFromNull();
     }
 
-    private createRawFromNull(): ApplicationResponseContract {
+    private transformApiToRaw(api: ApplicationResponseContract): ApplicationContract {
+        return {
+            callbackUrl: api.callback_url ?? null,
+            clientId: api.client_id ?? null,
+            createdAt: api.created_at ? new Date(api.created_at) : null,
+            deletedAt: api.deleted_at ? new Date(api.deleted_at) : null,
+            description: api.description ?? null,
+            grantType: api.grant_type ?? null,
+            id: api.id ? String(api.id) : null,
+            name: api.name ?? null,
+            realm: api.realm ?? null,
+            updatedAt: api.updated_at ? new Date(api.updated_at) : null,
+            url: api.url ?? null,
+        };
+    }
+
+    private transformRawToApi(raw: ApplicationContract): ApplicationResponseContract {
+        return {
+            callback_url: raw.callbackUrl ?? null,
+            client_id: raw.clientId ?? null,
+            created_at: raw.createdAt?.toDateString() ?? null,
+            deleted_at: raw.deletedAt?.toDateString() ?? null,
+            description: raw.description ?? null,
+            grant_type: raw.grantType ?? null,
+            id: raw.id ? String(raw.id) : null,
+            name: raw.name ?? null,
+            realm: raw.realm ?? null,
+            updated_at: raw.updatedAt?.toDateString() ?? null,
+            url: raw.url ?? null,
+        };
+    }
+
+    private createApiFromNull(): ApplicationResponseContract {
         return {
             callback_url: null,
             client_id: null,
@@ -28,116 +72,165 @@ export class Application implements ApplicationContract{
         };
     }
 
+    public toApi(): ApplicationResponseContract {
+        return this._apiData;
+    }
+
+    public toRaw(): ApplicationContract {
+        return this._rawData;
+    }
+
     get callbackUrl(): string | null
     {
-        return this._raw.callback_url ?? null;
+        return this._rawData.callbackUrl ?? null;
     }
 
     get callback_url(): string | null {
-        return this._raw.callback_url ?? null;
+        return this._apiData.callback_url ?? null;
     }
     
     get clientId(): string | null {
-        return this._raw.client_id ?? null;
+        return this._rawData.clientId ?? null;
     }
     
     get client_id(): string | null {
-        return this._raw.client_id ?? null;
+        return this._apiData.client_id ?? null;
     }
     
     get createdAt(): Date | null {
-        return this._raw.created_at ? new Date(this._raw.created_at) : null;
+        return this._rawData.createdAt ?? null;
     }
     
     get created_at(): string | null {
-        return this._raw.created_at ?? null;
+        return this._apiData.created_at ?? null;
     }
     
     get deletedAt(): Date | null {
-        return this._raw.deleted_at ? new Date(this._raw.deleted_at) : null;
+        return this._rawData.deletedAt ?? null;
     }
     
     get deleted_at(): string | null {
-        return this._raw.deleted_at ?? null;
+        return this._rawData.deleted_at ?? null;
     }
     
     get description(): string | null {
-        return this._raw.description ?? null;
+        return this._rawData.description ?? null;
     }
     
     get grantType(): string | null {
-        return this._raw.grant_type ?? null;
+        return this._rawData.grantType ?? null;
     }
     
     get grant_type(): string | null {
-        return this._raw.grant_type ?? null;
+        return this._apiData.grant_type ?? null;
     }
     
     get id(): number | string | null {
-        return this._raw.id ? Number(this._raw.id) : null;
+        return this._rawData.id ?? null;
     }
     
     get name(): string | null {
-        return this._raw.name ?? null;
+        return this._rawData.name ?? null;
     }
     
     get realm(): string | null {
-        return this._raw.realm ?? null;
+        return this._rawData.realm ?? null;
     }
     
     get updatedAt(): Date | null {
-        return this._raw.updated_at ? new Date(this._raw.updated_at) : null;
+        return this._rawData.updatedAt ?? null;
     }
     
     get updated_at(): string | null {
-        return this._raw.updated_at ?? null;
+        return this._apiData.updated_at ?? null;
     }
     
     get url(): string | null {
-        return this._raw.url ?? null;
+        return this._rawData.url ?? null;
     }
 
     set callback_url(value: string | null) {
-        this._raw.callback_url = value;
+        this._apiData.callback_url = value;
+        this._rawData.callbackUrl = value;
+    }
+
+    set callbackUrl(value: string | null) {
+        this._rawData.callbackUrl = value;
+        this._apiData.callback_url = value;
     }
 
     set client_id(value: string | null) {
-        this._raw.client_id = value;
+        this._apiData.client_id = value;
+        this._rawData.clientId = value;
+    }
+
+    set clientId(value: string | null) {
+        this._rawData.clientId = value;
+        this._apiData.client_id = value;
     }
 
     set created_at(value: string | null) {
-        this._raw.created_at = value;
+        this._apiData.created_at = value;
+        this._rawData.createdAt = value ? new Date(value) : null;
+    }
+
+    set createdAt(value: Date | null) {
+        this._rawData.createdAt = value;
+        this._apiData.created_at = value ? value.toString() : null;
     }
 
     set deleted_at(value: string | null) {
-        this._raw.deleted_at = value;
+        this._apiData.deleted_at = value;
+        this._rawData.deletedAt = value ? new Date(value) : null;
+    }
+
+    set deletedAt(value: Date | null) {
+        this._rawData.deletedAt = value;
+        this._apiData.deleted_at = value ? value.toString() : null;
     }
 
     set description(value: string | null) {
-        this._raw.description = value;
+        this._apiData.description = value;
+        this._rawData.description = value;
     }
 
     set grant_type(value: string | null) {
-        this._raw.grant_type = value;
+        this._apiData.grant_type = value;
+        this._rawData.grantType = value;
+    }
+
+    set grantType(value: string | null) {
+        this._rawData.grantType = value;
+        this._apiData.grant_type = value;
     }
 
     set id(value: string | number | null) {
-        this._raw.id = value ? String(value) : null;
+        this._apiData.id = value ? String(value) : null;
+        this._rawData.id = value ? Number(value) : null;
     }
 
     set name(value: string | null) {
-        this._raw.name = value;
+        this._apiData.name = value;
+        this._rawData.name = value;
     }
 
     set realm(value: string | null) {
-        this._raw.realm = value;
+        this._apiData.realm = value;
+        this._rawData.realm = value;
     }
 
     set updated_at(value: string | null) {
-        this._raw.updated_at = value;
+        this._apiData.updated_at = value;
+        this._rawData.updatedAt = value ? new Date(value) : null;
+    }
+
+    set updatedAt(value: Date | null) {
+        this._rawData.updatedAt = value;
+        this._apiData.updated_at = value ? value.toString() : null;
     }
 
     set url(value: string | null) {
-        this._raw.url = value;
+        this._apiData.url = value;
+        this._rawData.url = value;
     }
 }

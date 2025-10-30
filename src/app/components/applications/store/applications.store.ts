@@ -26,10 +26,10 @@ export class ApplicationStore {
     // readonly isLoggedIn = computed(() => !!this._accessToken());
 
     // setters
-    setIndex(raw: ApplicationResponseContract[]) {
+    setIndex(response: ApplicationResponseContract[]) {
         this._index.set([]);
-        const apps = raw.map(rawApplication => new Application(rawApplication));
-        this._index.set(apps);
+        const applications = response.map(application => new Application({apiData: application}));
+        this._index.set(applications);
     }
 
     setShow(application: Application | null = null):void {
@@ -63,7 +63,7 @@ export class ApplicationStore {
                 this.http.get<ApplicationResponseContract>(url, {observe: 'response'})
             );
             if (response.body) {
-                const application = new Application(response.body);
+                const application = new Application({apiData: response.body});
                 this._show.set(application);
                 this.apiSuccessHandler.handle(response, 'Application loaded successfully.');
                 return true;

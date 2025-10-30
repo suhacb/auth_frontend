@@ -24,7 +24,7 @@ export class ApplicationCreateModal {
   }
 
   onCreateApplicationClick(): void {
-    const application = this.applicationForm.value;
-    this.dialogRef.close(application);
+    const application = new Application({rawData: this.applicationForm.value});
+    this.dialogRef.close(application.toApi());
   }
 }
