@@ -9,6 +9,8 @@ import { Home } from './home/home';
 import { Applications } from './components/applications/applications';
 import { Index } from './components/applications/index';
 import { Show } from './components/applications/show/show';
+import { ApplicationsResolver } from './components/applications/resolvers/ApplicationsResolver';
+import { ApplicationResolver } from './components/applications/resolvers/ApplicationResolver';
 
 const routes: Routes = [
   {
@@ -34,12 +36,14 @@ const routes: Routes = [
           {
             path: '',
             component: Index,
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard],
+            resolve: { ApplicationsResolver }
           },
           {
             path: ':id',
             component: Show,
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard],
+            resolve: { ApplicationResolver }
           },
 
         ]

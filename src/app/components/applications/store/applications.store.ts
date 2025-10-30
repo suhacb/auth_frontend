@@ -5,6 +5,7 @@ import { ApiSuccessHandlerService } from '../../../core/http/api-success-handler
 import { ApiErrorHandlerService, ApiErrorResult } from '../../../core/http/api-error-handler.service';
 import { Application } from '../models/application';
 import { ApplicationApiResource } from '../contracts/ApplicationApiResource';
+import { ApplicationResource } from '../contracts/ApplicationResource';
 
 @Injectable({ providedIn: 'root' })
 
@@ -16,7 +17,7 @@ export class ApplicationStore {
     ) {}
 
     private _index = signal<Application[]>([]);
-    private _show = signal<Application>(new Application);
+    private _show = signal<ApplicationResource>(new Application().toRaw());
 
     // expose readonly signals
     readonly index = this._index.asReadonly();
@@ -33,7 +34,7 @@ export class ApplicationStore {
     }
 
     setShow(application: Application):void {
-        this._show.set(application);
+        this._show.set(application.toRaw());
     }
 
     async getIndex(): Promise<ApiErrorResult | boolean> {
@@ -64,7 +65,7 @@ export class ApplicationStore {
             );
             if (response.body) {
                 const application = new Application({apiData: response.body});
-                this._show.set(application);
+                this._show.set(application.toRaw());
                 this.apiSuccessHandler.handle(response, 'Application loaded successfully.');
                 return true;
             }

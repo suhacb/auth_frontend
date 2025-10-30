@@ -9,10 +9,10 @@ import { Application } from '../../models/application';
 })
 export class ApplicationIndex {
   @Input() applications: Application[] = [];
-  @Output() onShowEvent = new EventEmitter<string | number | null>();
+  @Output() onShowEvent = new EventEmitter<number>();
   @Output() onDeleteEvent = new EventEmitter<Application>();
 
-  onShowClick(id: string | number | null) {
+  onShowClick(id: number) {
     if (id) {
       this.onShowEvent.emit(id);
     }

@@ -8,24 +8,24 @@
   
   <mat-card-content>
     <form class="app-form" [formGroup]="form">
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" >
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" />
+          <input matInput formControlName="name" [readonly]="mode === 'show'" />
         </mat-form-field>
         
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Realm</mat-label>
-          <input matInput formControlName="realm" />
+          <input matInput formControlName="realm" [readonly]="mode === 'show'"/>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Client name</mat-label>
-          <input matInput formControlName="clientId" />
+          <input matInput formControlName="clientId" [readonly]="mode === 'show'"/>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Client secret</mat-label>
-          <input matInput formControlName="clientSecret" />
+          <input matInput formControlName="clientSecret" [readonly]="mode === 'show'"/>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -39,17 +39,17 @@
         
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>URL</mat-label>
-          <input matInput type="url" formControlName="url" />
+          <input matInput type="url" formControlName="url" [readonly]="mode === 'show'"/>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Callback URL</mat-label>
-          <input matInput type="url" formControlName="callbackUrl" />
+          <input matInput type="url" formControlName="callbackUrl" [readonly]="mode === 'show'"/>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="col-span-2 full-width">
           <mat-label>Description</mat-label>
-          <textarea matInput rows="3" formControlName="description"></textarea>
+          <textarea matInput rows="3" formControlName="description" [readonly]="mode === 'show'"></textarea>
         </mat-form-field>
       </form>
     </mat-card-content>

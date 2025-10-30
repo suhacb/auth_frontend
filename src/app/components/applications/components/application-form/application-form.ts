@@ -11,7 +11,7 @@ import { ApplicationResource } from '../../contracts/ApplicationResource';
   standalone: false
 })
 export class ApplicationForm implements OnInit {
-  @Input() mode: 'create' | 'edit' = 'create';
+  @Input() mode: 'create' | 'edit' | 'show' = 'create';
   @Input() application!: ApplicationResource;
 
   form!: FormGroup;
@@ -19,10 +19,10 @@ export class ApplicationForm implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+    console.log(this.application)
     if (!this.application) {
       this.application = new Application().toRaw();
     }
-    console.log(this.application);
     this.form = this.fb.group(this.application);
   }
 

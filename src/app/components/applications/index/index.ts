@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+// import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApplicationStore } from '../store/applications.store';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,13 +14,13 @@ import { ApplicationCreateModal } from '../components/application-create-modal/a
   styleUrl: './index.scss',
 })
 
-export class Index implements OnInit {
+export class Index {
   constructor(public store: ApplicationStore, private router: Router, private dialog: MatDialog) {}
   
-  async ngOnInit(): Promise<void> {
-    this.store.setIndex([]);
-    await this.store.getIndex();
-  }
+  // async ngOnInit(): Promise<void> {
+  //   this.store.setIndex([]);
+  //   await this.store.getIndex();
+  // }
 
   async show(id: number): Promise<void> {
     const response = await this.store.getApplication(id);
