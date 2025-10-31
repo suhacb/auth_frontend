@@ -24,7 +24,7 @@ export class ApplicationCreateModal {
   }
 
   onCreateApplicationClick(): void {
-    const application = new ApplicationMapper().toApp(this.applicationForm.value);
-    this.dialogRef.close(new ApplicationMapper().toApi(application));
+    // const application = new ApplicationMapper().toApp(this.applicationForm.getValue());
+    // this.dialogRef.close(new ApplicationMapper().toApi(application));
   }
 }

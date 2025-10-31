@@ -1,4 +1,4 @@
-<button
+<!-- <button
     matButton
     aria-label="New Application"
     class="new-application-button"
@@ -7,6 +7,7 @@
     <mat-icon>add</mat-icon>
     Create Application
 </button>
+-->
 @if(store.index().length > 0) {
     <ng-container>
         <app-application-index [applications]="store.index()" (onShowEvent)="show($event)" (onDeleteEvent)="confirmDelete($event)"></app-application-index>

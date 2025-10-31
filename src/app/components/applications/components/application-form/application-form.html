@@ -1,7 +1,7 @@
 <mat-card appearance="outlined">
   <mat-card-header>
-    <mat-card-title>{{ application.name }}</mat-card-title>
-    <mat-card-subtitle>{{ application.description }}</mat-card-subtitle>
+    <mat-card-title>{{ data.name }}</mat-card-title>
+    <mat-card-subtitle>{{ data.description }}</mat-card-subtitle>
   </mat-card-header>
   
   <div class="spacer"></div>
@@ -84,6 +84,12 @@
               <mat-error >{{form.get('description')?.getError('server')}}</mat-error>
           }
         </mat-form-field>
+
+        <div class="form-actions">
+          @if(mode === 'show') { <button mat-button (click)="enterEditMode()">Edit</button> }
+          @if(mode !== 'show') { <button mat-button color="primary" (click)="onSave()">Save</button> }
+          @if(mode !== 'show') { <button mat-button (click)="onCancel()">Cancel</button> }
+        </div>
       </form>
     </mat-card-content>
   </mat-card>

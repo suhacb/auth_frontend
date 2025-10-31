@@ -1,9 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { applyValidationErrors, resetValidationErrors } from '../../../../core/http/form-error-helper';
-import { ValidationErrorsMap } from '../../../../core/http/api-error-handler.service';
 import { Application } from '../../contracts/Application';
-import { ApplicationMapper } from '../../models/ApplicationMapper';
+import { BaseFormComponent } from '../../../../core/BaseFormComponent/BaseFormComponent';
 
 
 @Component({
@@ -12,30 +10,29 @@ import { ApplicationMapper } from '../../models/ApplicationMapper';
   styleUrls: ['./application-form.scss'],
   standalone: false
 })
-export class ApplicationForm implements OnInit {
-  @Input() mode: 'create' | 'edit' | 'show' = 'create';
-  @Input() application!: Application;
-
-  form!: FormGroup;
-
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit() {
-    if (!this.application) {
-      this.application = new ApplicationMapper().make();
-    }
-    this.form = this.fb.group(this.application);
+export class ApplicationForm extends BaseFormComponent<Application> {
+  constructor(private fb: FormBuilder) {
+    super();
   }
 
-  get value() {
-    return this.form.value;
+  buildForm(data: Application): FormGroup {
+    return this.fb.group({
+      name: [data.name ?? '', Validators.required],
+      realm: [data.realm ?? '', Validators.required],
+      clientId: [data.clientId ?? '', Validators.required],
+      clientSecret: [data.clientSecret ?? ''],
+      grantType: [data.grantType ?? '', Validators.required],
+      url: [data.url ?? '', Validators.required],
+      callbackUrl: [data.callbackUrl ?? '', Validators.required],
+      description: [data.description ?? '']
+    });
   }
 
-  applyValidationErrors(errors: ValidationErrorsMap): void {
-    applyValidationErrors(this.form, errors);
+  patchForm(data: Application): void {
+    this.form.patchValue(data);
   }
 
-  resetValidationErrors(): void {
-    resetValidationErrors(this.form);
+  getValue(): Application {
+    return this.form.getRawValue() as Application;
   }
 }

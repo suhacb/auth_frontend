@@ -1,21 +1,13 @@
-<div>{{application | json}}</div>
-
 @if(store.show().id > 0) {
     <ng-container>
         <app-application-form
             #applicationForm
-            [application]="application"
+            [data]="application"
             [mode] = "mode()"
+            (save)="onUpdate($event)"
+            (cancel)="onCancel()"
+            (modeChange)="onModeChange($event)"
         ></app-application-form>
     </ng-container>
-}
-
-@if(mode() == 'show') {
-    <button matButton color="primary" (click)="editApplication()">Edit</button>
-} @else if(mode() == 'edit') {
-    <button matButton color="primary" (click)="updateApplication()">Save</button>
-    <button matButton color="warn" (click)="cancelEdit()">Cancel</button>
-} @else {
-
 }
 

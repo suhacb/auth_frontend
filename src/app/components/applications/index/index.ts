@@ -41,6 +41,7 @@ export class Index {
   }
 
   openApplicationCreateModal() {
+    return 
     const dialogRef = this.dialog.open(ApplicationCreateModal, {
       width: '800px',
       disableClose: true // user cannot close by clicking outside
