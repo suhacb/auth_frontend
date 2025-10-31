@@ -15,6 +15,7 @@ export abstract class BaseFormComponent<T> implements OnInit{
     get mode(): formMode {
         return this._mode;
     }
+    @Input() backendErrors: Record<string, string[]> | null = null;
     @Output() save = new EventEmitter<T>();
     @Output() cancel = new EventEmitter<void>();
     @Output() modeChange = new EventEmitter<formMode>();
@@ -30,6 +31,13 @@ export abstract class BaseFormComponent<T> implements OnInit{
     ngOnInit(): void {
         this.form = this.buildForm(this.data);
         this.updateMode(this.mode);
+    }
+
+    ngOnChanges(): void {
+        // Whenever backendErrors changes, attach to form
+        if (this.backendErrors) {
+        this.setBackendErrors(this.backendErrors);
+        }
     }
 
     enterEditMode(): void {
@@ -53,17 +61,7 @@ export abstract class BaseFormComponent<T> implements OnInit{
     }
 
     onSave(): void {
-        if (this.form.valid) {
-            this.save.emit(this.getValue());
-
-            if (this.mode === 'edit') {
-                this.readonly.set(true);
-                this.mode = 'show';
-                this.modeChange.emit(this.mode);
-            }
-        } else {
-            this.form.markAllAsTouched();
-        }
+        this.save.emit(this.getValue());
     }
 
     private updateMode(mode: formMode) {
@@ -81,5 +79,24 @@ export abstract class BaseFormComponent<T> implements OnInit{
                 this.originalData.set(null);
                 break;
         }
+    }
+
+    protected setBackendErrors(errors: Record<string, string[]>): void {
+        if (!this.form) return;
+
+        for (const key in errors) {
+            if (this.form.controls[key]) {
+                // Attach backend error to the control
+                this.form.controls[key].setErrors({
+                    ...this.form.controls[key].errors,
+                    backend: errors[key].join(' '),
+                });
+            }
+        }
+    }
+
+    getError(controlName: string, errorKey: string): string | null {
+        const control = this.form.controls[controlName];
+        return control?.errors?.[errorKey] ?? null;
     }
 }

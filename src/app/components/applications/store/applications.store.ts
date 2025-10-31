@@ -103,7 +103,6 @@ export class ApplicationStore {
     updateApplication(id: number, application: Application): Observable<Application> {
         const url = `http://localhost:9025/api/applications/${id}`;
         const payload: ApplicationApiPayload = new ApplicationMapper().toApi(application);
-        console.log(payload);
 
         return this.http.put<ApplicationApiResource>(url, payload).pipe(
             map((res: ApplicationApiResource) => {

@@ -4,6 +4,7 @@
             #applicationForm
             [data]="application"
             [mode] = "mode()"
+            [backendErrors]="backendErrors()"
             (save)="onUpdate($event)"
             (cancel)="onCancel()"
             (modeChange)="onModeChange($event)"

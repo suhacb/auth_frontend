@@ -4,6 +4,7 @@ import { ApplicationStore } from '../store/applications.store';
 import { ApplicationForm } from '../components/application-form/application-form';
 import { Application } from '../contracts/Application';
 import { ApplicationMapper } from '../models/ApplicationMapper';
+import { FormErrorMapper } from '../../../core/ErrorMapper/ErrorMapper';
 
 @Component({
   selector: 'app-show',
@@ -14,6 +15,7 @@ import { ApplicationMapper } from '../models/ApplicationMapper';
 export class Show {
   public mode = signal<'show' | 'edit' | 'create'>('show');
   public application: Application;
+  backendErrors = signal<Record<string, string[]> | null>(null);
   
   constructor(public store: ApplicationStore, private router: Router) {
     this.application = this.store.show();
@@ -23,13 +25,18 @@ export class Show {
   @ViewChild('applicationForm') applicationForm!: ApplicationForm;
 
   onUpdate(updatedApplication: Application) {
+    this.backendErrors.set(null); // clear old errors
     this.store.updateApplication(this.application.id, updatedApplication).subscribe({
       next: (response) => {
         this.application = response;
         this.mode.set('show');
       },
       error: (error) => {
-        console.log(error);
+        if (error.status === 422 && error.error?.errors) {
+          this.backendErrors.set(FormErrorMapper.toCamelCase(error.error.errors)); // set field-level errors
+        } else {
+          console.error(error);
+        }
       }
     })
   }
