@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, Input, Output, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Application } from '../../models/application';
 import { ApplicationForm } from '../application-form/application-form';
-import { ApplicationResource } from '../../contracts/ApplicationResource';
+import { Application } from '../../contracts/Application';
+import { ApplicationMapper } from '../../models/ApplicationMapper';
 
 @Component({
   selector: 'app-application-create-modal',
@@ -12,7 +12,7 @@ import { ApplicationResource } from '../../contracts/ApplicationResource';
 })
 export class ApplicationCreateModal {
 
-  public application: ApplicationResource = new Application().toRaw();
+  public application: Application = new ApplicationMapper().make();
 
   constructor(private dialogRef: MatDialogRef<ApplicationCreateModal>) {}
 
@@ -24,7 +24,7 @@ export class ApplicationCreateModal {
   }
 
   onCreateApplicationClick(): void {
-    const application = new Application({rawData: this.applicationForm.value});
-    this.dialogRef.close(application.toApi());
+    const application = new ApplicationMapper().toApp(this.applicationForm.value);
+    this.dialogRef.close(new ApplicationMapper().toApi(application));
   }
 }

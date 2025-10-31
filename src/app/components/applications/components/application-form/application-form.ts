@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Application } from '../../models/application';
-import { ApplicationResource } from '../../contracts/ApplicationResource';
 import { applyValidationErrors, resetValidationErrors } from '../../../../core/http/form-error-helper';
 import { ValidationErrorsMap } from '../../../../core/http/api-error-handler.service';
+import { Application } from '../../contracts/Application';
+import { ApplicationMapper } from '../../models/ApplicationMapper';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { ValidationErrorsMap } from '../../../../core/http/api-error-handler.ser
 })
 export class ApplicationForm implements OnInit {
   @Input() mode: 'create' | 'edit' | 'show' = 'create';
-  @Input() application!: ApplicationResource;
+  @Input() application!: Application;
 
   form!: FormGroup;
 
@@ -22,7 +22,7 @@ export class ApplicationForm implements OnInit {
 
   ngOnInit() {
     if (!this.application) {
-      this.application = new Application().toRaw();
+      this.application = new ApplicationMapper().make();
     }
     this.form = this.fb.group(this.application);
   }

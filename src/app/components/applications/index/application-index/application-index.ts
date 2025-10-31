@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ApplicationResource } from '../../contracts/ApplicationResource';
+import { Application } from '../../contracts/Application';
 
 @Component({
   selector: 'app-application-index',
@@ -8,9 +8,9 @@ import { ApplicationResource } from '../../contracts/ApplicationResource';
   styleUrl: './application-index.scss'
 })
 export class ApplicationIndex {
-  @Input() applications: ApplicationResource[] = [];
+  @Input() applications: Application[] = [];
   @Output() onShowEvent = new EventEmitter<number>();
-  @Output() onDeleteEvent = new EventEmitter<ApplicationResource>();
+  @Output() onDeleteEvent = new EventEmitter<Application>();
 
   onShowClick(id: number | null) {
     if (id) {
@@ -18,7 +18,7 @@ export class ApplicationIndex {
     }
   }
 
-  onDeleteClick(application: ApplicationResource) {
+  onDeleteClick(application: Application) {
     this.onDeleteEvent.emit(application);
   }
 }

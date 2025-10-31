@@ -3,9 +3,11 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { firstValueFrom } from 'rxjs';
 import { ApiSuccessHandlerService } from '../../../core/http/api-success-handler.service';
 import { ApiErrorHandlerService, ApiErrorResult } from '../../../core/http/api-error-handler.service';
-import { Application } from '../models/application';
-import { ApplicationApiResource } from '../contracts/ApplicationApiResource';
-import { ApplicationResource } from '../contracts/ApplicationResource';
+import { Application, ApplicationApiPayload, ApplicationApiResource } from '../contracts/Application';
+import { ApplicationMapper } from '../models/ApplicationMapper';
+// import { Application } from '../models/application';
+// import { ApplicationApiResource } from '../contracts/ApplicationApiResource';
+// import { ApplicationResource } from '../contracts/ApplicationResource';
 
 @Injectable({ providedIn: 'root' })
 
@@ -16,8 +18,8 @@ export class ApplicationStore {
         private apiErrorHandler: ApiErrorHandlerService
     ) {}
 
-    private _index = signal<ApplicationResource[]>([]);
-    private _show = signal<ApplicationResource>(new Application().toRaw());
+    private _index = signal<Application[]>([]);
+    private _show = signal<Application>(new ApplicationMapper().make())
 
     // expose readonly signals
     readonly index = this._index.asReadonly();
@@ -26,12 +28,12 @@ export class ApplicationStore {
     // setters
     setIndex(response: ApplicationApiResource[]) {
         this._index.set([]);
-        const applications = response.map(application => new Application({apiData: application}).toRaw());
+        const applications = response.map(application => new ApplicationMapper().toApp(application));
         this._index.set(applications);
     }
 
     setShow(application: Application):void {
-        this._show.set(application.toRaw());
+        this._show.set(application);
     }
 
     async getIndex(): Promise<ApiErrorResult | boolean> {
@@ -61,8 +63,8 @@ export class ApplicationStore {
                 this.http.get<ApplicationApiResource>(url, {observe: 'response'})
             );
             if (response.body) {
-                const application = new Application({apiData: response.body});
-                this._show.set(application.toRaw());
+                const application = new ApplicationMapper().toApp(response.body);
+                this._show.set(application);
                 this.apiSuccessHandler.handle(response, 'Application loaded successfully.');
                 return true;
             }
@@ -76,14 +78,14 @@ export class ApplicationStore {
         }
     }
 
-    async updateApplication(application: ApplicationApiResource): Promise<ApiErrorResult | boolean> {
-         const url = 'http://localhost:9025/api/applications/' + application.id;
+    async updateApplication(id: number, application: ApplicationApiPayload): Promise<ApiErrorResult | boolean> {
+         const url = 'http://localhost:9025/api/applications/' + id;
          try {
              const response = await firstValueFrom(
                  this.http.put<ApplicationApiResource>(url, application, {observe: 'response'})
              );
              if (response.body) {
-                 this.setShow(new Application({apiData: response.body}))
+                 this.setShow(new ApplicationMapper().toApp(response.body));
                  this.apiSuccessHandler.handle(response, 'Application updated successfully.');
                  return true;
              }
@@ -122,7 +124,7 @@ export class ApplicationStore {
         const url = 'http://localhost:9025/api/applications';
         try {
             const response = await firstValueFrom(
-                this.http.post<ApplicationApiResource>(url, application, {observe: 'response'})
+                this.http.post<ApplicationApiResource>(url, new ApplicationMapper().toApi(application), {observe: 'response'})
             );
             if (response.ok) {
                 this.apiSuccessHandler.handle(response, 'Application created successfully.');

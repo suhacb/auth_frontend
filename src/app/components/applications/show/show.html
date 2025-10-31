@@ -1,5 +1,7 @@
-@if(store.show().id) {
-    <ng-container *ngIf="store.show()">
+<div>{{application | json}}</div>
+
+@if(store.show().id > 0) {
+    <ng-container>
         <app-application-form
             #applicationForm
             [application]="application"

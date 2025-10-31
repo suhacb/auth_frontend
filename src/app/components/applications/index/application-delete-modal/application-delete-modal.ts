@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { Application } from '../../models/application';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Application } from '../../contracts/Application';
 
 @Component({
   selector: 'app-application-delete-modal',
