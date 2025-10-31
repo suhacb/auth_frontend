@@ -13,8 +13,6 @@ export class ApplicationResolver {
         try {
             await this.store.getApplication(Number(route.params['id']));
         } catch (error) {
-            console.log(error);
-            console.log('Should redirect');
             await this.router.navigate(['/applications']);
         }
         

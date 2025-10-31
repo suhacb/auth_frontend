@@ -19,7 +19,6 @@ export class ApplicationForm implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    console.log(this.application)
     if (!this.application) {
       this.application = new Application().toRaw();
     }

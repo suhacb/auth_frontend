@@ -1,7 +1,19 @@
-<ng-container *ngIf="store.show()">
-    <app-application-form
-        [application]="application"
-        [mode] = "'show'"
-    ></app-application-form>
-</ng-container>
+@if(store.show().id) {
+    <ng-container *ngIf="store.show()">
+        <app-application-form
+            #applicationForm
+            [application]="application"
+            [mode] = "mode()"
+        ></app-application-form>
+    </ng-container>
+}
+
+@if(mode() == 'show') {
+    <button matButton color="primary" (click)="editApplication()">Edit</button>
+} @else if(mode() == 'edit') {
+    <button matButton color="primary" (click)="updateApplication()">Save</button>
+    <button matButton color="warn" (click)="cancelEdit()">Cancel</button>
+} @else {
+
+}
 

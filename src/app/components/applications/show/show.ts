@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, signal, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApplicationStore } from '../store/applications.store';
 import { Application } from '../models/application';
 import { ApplicationResource } from '../contracts/ApplicationResource';
+import { ApplicationForm } from '../components/application-form/application-form';
 
 @Component({
   selector: 'app-show',
@@ -12,8 +13,35 @@ import { ApplicationResource } from '../contracts/ApplicationResource';
 })
 export class Show {
   public application: ApplicationResource;
+  public mode = signal<'show' | 'edit' | 'create'>('show');
 
-  constructor(public store: ApplicationStore) {
+  @ViewChild('applicationForm') applicationForm!: ApplicationForm;
+
+  constructor(public store: ApplicationStore, private router: Router) {
     this.application = this.store.show();
+  }
+
+  editApplication(): void {
+    this.mode.set('edit');
+  }
+
+  cancelEdit(): void {
+    this.mode.set('show');
+    this.application = this.store.show();
+    this.router.navigate(['/applications', this.application.id]);
+  }
+
+  async updateApplication(): Promise<void> {
+    const data = new Application({rawData: this.applicationForm.value});
+    try {
+      await this.store.updateApplication(data.toApi()).then(() => {
+        this.application = this.store.show();
+        console.log(this.application);
+        this.mode.set('show');
+        this.router.navigate(['/applications', this.application.id]);
+      });
+    } catch (error) {
+      console.error('Error updating application:', error);
+    }
   }
 }

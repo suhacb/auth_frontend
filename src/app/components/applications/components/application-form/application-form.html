@@ -28,19 +28,28 @@
           <input matInput formControlName="clientSecret" [readonly]="mode === 'show'"/>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Grant Type</mat-label>
-          <mat-select formControlName="grantType">
-            <mat-option value="password">Password</mat-option>
-            <mat-option value="authorization_code">Authorization Code</mat-option>
-            <mat-option value="client_credentials">Client Credentials</mat-option>
-          </mat-select>
-        </mat-form-field>
-        
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>URL</mat-label>
-          <input matInput type="url" formControlName="url" [readonly]="mode === 'show'"/>
-        </mat-form-field>
+        @if(mode !== 'show') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Grant Type</mat-label>
+            <mat-select formControlName="grantType">
+              <mat-option value="password">password</mat-option>
+              <mat-option value="authorization_code">authorization_code</mat-option>
+              <mat-option value="client_credentials">client_credentials</mat-option>
+              <mat-option value="refresh_token">refresh_token</mat-option>
+              <mat-option value="refresh_token">device_code</mat-option>
+            </mat-select>
+          </mat-form-field>
+        } @else {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Grant Type</mat-label>
+            <input matInput type="grantType" formControlName="grantType" [readonly]="mode === 'show'"/>
+          </mat-form-field>          
+        }
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>URL</mat-label>
+            <input matInput type="url" formControlName="url" [readonly]="mode === 'show'"/>
+          </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Callback URL</mat-label>

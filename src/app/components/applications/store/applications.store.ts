@@ -16,20 +16,17 @@ export class ApplicationStore {
         private apiErrorHandler: ApiErrorHandlerService
     ) {}
 
-    private _index = signal<Application[]>([]);
+    private _index = signal<ApplicationResource[]>([]);
     private _show = signal<ApplicationResource>(new Application().toRaw());
 
     // expose readonly signals
     readonly index = this._index.asReadonly();
     readonly show = this._show.asReadonly();
 
-    // derived/computed signals
-    // readonly isLoggedIn = computed(() => !!this._accessToken());
-
     // setters
     setIndex(response: ApplicationApiResource[]) {
         this._index.set([]);
-        const applications = response.map(application => new Application({apiData: application}));
+        const applications = response.map(application => new Application({apiData: application}).toRaw());
         this._index.set(applications);
     }
 
@@ -79,24 +76,26 @@ export class ApplicationStore {
         }
     }
 
-    async updateApplication(id: number): Promise<ApiErrorResult | boolean> {
-        console.log('update');
-        return false;
-
-//         const url = 'http://localhost:9025/api/applications/' + id;
-//         try {
-//             const response = await firstValueFrom(
-//                 this.http.get(url, {observe: 'response'})
-//             );
-// 
-//             return true;
-//         } catch (error) {
-//             if (error instanceof HttpErrorResponse) {
-//                 return this.apiErrorHandler.handle(error);
-//             }
-//             console.error('Unexpected error: ' + error);
-//             return false;
-//         }
+    async updateApplication(application: ApplicationApiResource): Promise<ApiErrorResult | boolean> {
+         const url = 'http://localhost:9025/api/applications/' + application.id;
+         try {
+             const response = await firstValueFrom(
+                 this.http.put<ApplicationApiResource>(url, application, {observe: 'response'})
+             );
+            if (response.ok && response.body) {
+                this.setShow(new Application({apiData: response.body}))
+                this.apiSuccessHandler.handle(response, 'Application updated successfully.');
+                return true;
+            }
+ 
+             return true;
+         } catch (error) {
+             if (error instanceof HttpErrorResponse) {
+                 return this.apiErrorHandler.handle(error);
+             }
+             console.error('Unexpected error: ' + error);
+             return false;
+         }
     }
 
     async deleteApplication(id: string | number): Promise<ApiErrorResult | boolean>

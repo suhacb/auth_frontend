@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApplicationDeleteModal } from './application-delete-modal/application-delete-modal';
 import { Application } from '../models/application';
 import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
+import { ApplicationResource } from '../contracts/ApplicationResource';
 
 @Component({
   selector: 'app-index',
@@ -16,20 +17,18 @@ import { ApplicationCreateModal } from '../components/application-create-modal/a
 
 export class Index {
   constructor(public store: ApplicationStore, private router: Router, private dialog: MatDialog) {}
-  
-  // async ngOnInit(): Promise<void> {
-  //   this.store.setIndex([]);
-  //   await this.store.getIndex();
-  // }
 
   async show(id: number): Promise<void> {
-    const response = await this.store.getApplication(id);
-    if (response) {
+    if (id) {
       this.router.navigate(['/applications', id]);
     }
+    // const response = await this.store.getApplication(id);
+    // if (response) {
+    //   this.router.navigate(['/applications', id]);
+    // }
   }
 
-  confirmDelete(application: Application) {
+  confirmDelete(application: ApplicationResource) {
     const dialogRef = this.dialog.open(ApplicationDeleteModal, {
       width: '600px',
       disableClose: true, // user cannot close by clicking outside

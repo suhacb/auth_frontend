@@ -6,10 +6,12 @@
     >
       Index
     </button>
-    <span *ngIf="!isIndexActive()"> | </span>
-    <button *ngIf="!isIndexActive()" mat-button disabled>
-        {{store.show()?.name}}
-    </button>
+    @if(!isIndexActive()) {
+      <span> | </span>
+      <button matButton disabled>
+          {{store.show().name}}
+      </button>
+    }
 </div>
 <h2 mat-headline>Applications</h2>
 <div>

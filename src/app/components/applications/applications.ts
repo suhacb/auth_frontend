@@ -12,6 +12,11 @@ export class Applications {
   constructor(private router: Router, public store: ApplicationStore) {}
 
   isIndexActive(): boolean {
-    return this.router.isActive('/applications', true);
+    return this.router.isActive('/applications', {
+      paths: 'exact',
+      queryParams: 'ignored',
+      fragment: 'ignored',
+      matrixParams: 'ignored',
+    });
   }
 }
