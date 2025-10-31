@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApplicationStore } from '../store/applications.store';
 import { ApplicationForm } from '../components/application-form/application-form';
 import { Application } from '../contracts/Application';
+import { ApplicationMapper } from '../models/ApplicationMapper';
 
 @Component({
   selector: 'app-show',
@@ -22,7 +23,15 @@ export class Show {
   @ViewChild('applicationForm') applicationForm!: ApplicationForm;
 
   onUpdate(updatedApplication: Application) {
-    console.log(updatedApplication);
+    this.store.updateApplication(this.application.id, updatedApplication).subscribe({
+      next: (response) => {
+        this.application = response;
+        this.mode.set('show');
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
   onCancel() {

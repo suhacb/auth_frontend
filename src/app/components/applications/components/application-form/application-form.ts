@@ -20,7 +20,7 @@ export class ApplicationForm extends BaseFormComponent<Application> {
       name: [data.name ?? '', Validators.required],
       realm: [data.realm ?? '', Validators.required],
       clientId: [data.clientId ?? '', Validators.required],
-      clientSecret: [data.clientSecret ?? ''],
+      clientSecret: [data.clientSecret ?? undefined],
       grantType: [data.grantType ?? '', Validators.required],
       url: [data.url ?? '', Validators.required],
       callbackUrl: [data.callbackUrl ?? '', Validators.required],

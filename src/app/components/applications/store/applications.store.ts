@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
 import { ApiSuccessHandlerService } from '../../../core/http/api-success-handler.service';
 import { ApiErrorHandlerService, ApiErrorResult } from '../../../core/http/api-error-handler.service';
 import { Application, ApplicationApiPayload, ApplicationApiResource } from '../contracts/Application';
@@ -78,25 +78,44 @@ export class ApplicationStore {
         }
     }
 
-    async updateApplication(id: number, application: ApplicationApiPayload): Promise<ApiErrorResult | boolean> {
-         const url = 'http://localhost:9025/api/applications/' + id;
-         try {
-             const response = await firstValueFrom(
-                 this.http.put<ApplicationApiResource>(url, application, {observe: 'response'})
-             );
-             if (response.body) {
-                 this.setShow(new ApplicationMapper().toApp(response.body));
-                 this.apiSuccessHandler.handle(response, 'Application updated successfully.');
-                 return true;
-             }
-             return true;
-         } catch (error) {
-             if (error instanceof HttpErrorResponse) {
-                 return this.apiErrorHandler.handle(error);
-             }
-             console.error('Unexpected error: ' + error);
-             return false;
-         }
+//     async updateApplication(id: number, application: Application): Promise<ApiErrorResult | boolean> {
+//          const url = 'http://localhost:9025/api/applications/' + id;
+//          const data: ApplicationApiPayload = new ApplicationMapper().toApi(application);
+//          try {
+//              const response = await firstValueFrom(
+//                  this.http.put<ApplicationApiResource>(url, data, {observe: 'response'})
+//              );
+//              if (response.body) {
+//                  this.setShow(new ApplicationMapper().toApp(response.body));
+//                  this.apiSuccessHandler.handle(response, 'Application updated successfully.');
+//                  return true;
+//              }
+//              return true;
+//          } catch (error) {
+//              if (error instanceof HttpErrorResponse) {
+//                  return this.apiErrorHandler.handle(error);
+//              }
+//              console.error('Unexpected error: ' + error);
+//              return false;
+//          }
+//     }
+
+    updateApplication(id: number, application: Application): Observable<Application> {
+        const url = `http://localhost:9025/api/applications/${id}`;
+        const payload: ApplicationApiPayload = new ApplicationMapper().toApi(application);
+        console.log(payload);
+
+        return this.http.put<ApplicationApiResource>(url, payload).pipe(
+            map((res: ApplicationApiResource) => {
+                const application = new ApplicationMapper().toApp(res);
+                this.setShow(application);
+                return application;
+            }),
+            catchError((error: HttpErrorResponse) => {
+                console.error('Update failed', error);
+                return throwError(() => error);
+            })
+        );
     }
 
     async deleteApplication(id: string | number): Promise<ApiErrorResult | boolean>
