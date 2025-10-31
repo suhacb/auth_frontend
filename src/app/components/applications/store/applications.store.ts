@@ -82,12 +82,11 @@ export class ApplicationStore {
              const response = await firstValueFrom(
                  this.http.put<ApplicationApiResource>(url, application, {observe: 'response'})
              );
-            if (response.ok && response.body) {
-                this.setShow(new Application({apiData: response.body}))
-                this.apiSuccessHandler.handle(response, 'Application updated successfully.');
-                return true;
-            }
- 
+             if (response.body) {
+                 this.setShow(new Application({apiData: response.body}))
+                 this.apiSuccessHandler.handle(response, 'Application updated successfully.');
+                 return true;
+             }
              return true;
          } catch (error) {
              if (error instanceof HttpErrorResponse) {

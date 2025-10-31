@@ -28,20 +28,22 @@ export class Show {
   cancelEdit(): void {
     this.mode.set('show');
     this.application = this.store.show();
+    this.applicationForm.resetValidationErrors();
     this.router.navigate(['/applications', this.application.id]);
   }
 
   async updateApplication(): Promise<void> {
     const data = new Application({rawData: this.applicationForm.value});
-    try {
-      await this.store.updateApplication(data.toApi()).then(() => {
-        this.application = this.store.show();
-        console.log(this.application);
-        this.mode.set('show');
-        this.router.navigate(['/applications', this.application.id]);
-      });
-    } catch (error) {
-      console.error('Error updating application:', error);
+    const result =  await this.store.updateApplication(data.toApi());
+    
+    if (result === true) {
+      this.application = this.store.show();
+      this.mode.set('show');
+      this.router.navigate(['/applications', this.application.id]);
+    }
+
+    if (result && typeof result === 'object' && result.validationErrors) {
+      this.applicationForm.applyValidationErrors(result.validationErrors);
     }
   }
 }

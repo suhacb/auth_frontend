@@ -11,24 +11,36 @@
         <mat-form-field appearance="outline" class="full-width" >
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" [readonly]="mode === 'show'" />
+          @if(form.get('name')?.getError('server')) {
+              <mat-error >{{form.get('name')?.getError('server')}}</mat-error>
+          }
         </mat-form-field>
         
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Realm</mat-label>
           <input matInput formControlName="realm" [readonly]="mode === 'show'"/>
+          @if(form.get('realm')?.getError('server')) {
+              <mat-error >{{form.get('realm')?.getError('server')}}</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Client name</mat-label>
           <input matInput formControlName="clientId" [readonly]="mode === 'show'"/>
+          @if(form.get('clientId')?.getError('server')) {
+              <mat-error >{{form.get('clientId')?.getError('server')}}</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Client secret</mat-label>
           <input matInput formControlName="clientSecret" [readonly]="mode === 'show'"/>
+          @if(form.get('clientSecret')?.getError('server')) {
+              <mat-error >{{form.get('clientSecret')?.getError('server')}}</mat-error>
+          }
         </mat-form-field>
 
-        @if(mode !== 'show') {
+        @if(mode === 'create' || mode === 'edit') {
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Grant Type</mat-label>
             <mat-select formControlName="grantType">
@@ -38,6 +50,9 @@
               <mat-option value="refresh_token">refresh_token</mat-option>
               <mat-option value="refresh_token">device_code</mat-option>
             </mat-select>
+            @if(form.get('grantType')?.getError('server')) {
+                <mat-error >{{form.get('grantType')?.getError('server')}}</mat-error>
+            }
           </mat-form-field>
         } @else {
           <mat-form-field appearance="outline" class="full-width">
@@ -46,19 +61,28 @@
           </mat-form-field>          
         }
           
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>URL</mat-label>
-            <input matInput type="url" formControlName="url" [readonly]="mode === 'show'"/>
-          </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>URL</mat-label>
+          <input matInput type="url" formControlName="url" [readonly]="mode === 'show'"/>
+          @if(form.get('url')?.getError('server')) {
+              <mat-error >{{form.get('url')?.getError('server')}}</mat-error>
+          }
+        </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Callback URL</mat-label>
           <input matInput type="url" formControlName="callbackUrl" [readonly]="mode === 'show'"/>
+          @if(form.get('callbackUrl')?.getError('server')) {
+              <mat-error >{{form.get('callbackUrl')?.getError('server')}}</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="col-span-2 full-width">
           <mat-label>Description</mat-label>
           <textarea matInput rows="3" formControlName="description" [readonly]="mode === 'show'"></textarea>
+          @if(form.get('description')?.getError('server')) {
+              <mat-error >{{form.get('description')?.getError('server')}}</mat-error>
+          }
         </mat-form-field>
       </form>
     </mat-card-content>

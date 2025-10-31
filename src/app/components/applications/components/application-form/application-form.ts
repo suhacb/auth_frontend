@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Application } from '../../models/application';
 import { ApplicationResource } from '../../contracts/ApplicationResource';
+import { applyValidationErrors, resetValidationErrors } from '../../../../core/http/form-error-helper';
+import { ValidationErrorsMap } from '../../../../core/http/api-error-handler.service';
 
 
 @Component({
@@ -27,5 +29,13 @@ export class ApplicationForm implements OnInit {
 
   get value() {
     return this.form.value;
+  }
+
+  applyValidationErrors(errors: ValidationErrorsMap): void {
+    applyValidationErrors(this.form, errors);
+  }
+
+  resetValidationErrors(): void {
+    resetValidationErrors(this.form);
   }
 }
