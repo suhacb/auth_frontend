@@ -56,49 +56,41 @@ export class ApplicationStore {
         }
     }
 
-    async getApplication(id: number): Promise<ApiErrorResult | boolean> {
-        const url = 'http://localhost:9025/api/applications/' + id;
-        try {
-            const response = await firstValueFrom(
-                this.http.get<ApplicationApiResource>(url, {observe: 'response'})
-            );
-            if (response.body) {
-                const application = new ApplicationMapper().toApp(response.body);
-                this._show.set(application);
-                this.apiSuccessHandler.handle(response, 'Application loaded successfully.');
-                return true;
-            }
-            return true;
-        } catch (error) {
-            if (error instanceof HttpErrorResponse) {
-                return this.apiErrorHandler.handle(error);
-            }
-            console.error('Unexpected error: ' + error);
-            return false;
-        }
-    }
+    // async getApplication(id: number): Promise<ApiErrorResult | boolean> {
+    //     const url = 'http://localhost:9025/api/applications/' + id;
+    //     try {
+    //         const response = await firstValueFrom(
+    //             this.http.get<ApplicationApiResource>(url, {observe: 'response'})
+    //         );
+    //         if (response.body) {
+    //             const application = new ApplicationMapper().toApp(response.body);
+    //             this._show.set(application);
+    //             this.apiSuccessHandler.handle(response, 'Application loaded successfully.');
+    //             return true;
+    //         }
+    //         return true;
+    //     } catch (error) {
+    //         if (error instanceof HttpErrorResponse) {
+    //             return this.apiErrorHandler.handle(error);
+    //         }
+    //         console.error('Unexpected error: ' + error);
+    //         return false;
+    //     }
+    // }
 
-//     async updateApplication(id: number, application: Application): Promise<ApiErrorResult | boolean> {
-//          const url = 'http://localhost:9025/api/applications/' + id;
-//          const data: ApplicationApiPayload = new ApplicationMapper().toApi(application);
-//          try {
-//              const response = await firstValueFrom(
-//                  this.http.put<ApplicationApiResource>(url, data, {observe: 'response'})
-//              );
-//              if (response.body) {
-//                  this.setShow(new ApplicationMapper().toApp(response.body));
-//                  this.apiSuccessHandler.handle(response, 'Application updated successfully.');
-//                  return true;
-//              }
-//              return true;
-//          } catch (error) {
-//              if (error instanceof HttpErrorResponse) {
-//                  return this.apiErrorHandler.handle(error);
-//              }
-//              console.error('Unexpected error: ' + error);
-//              return false;
-//          }
-//     }
+    getApplication(id: number): Observable<Application> {
+        const url = `http://localhost:9025/api/applications/${id}`;
+        return this.http.get<ApplicationApiResource>(url).pipe(
+            map((res: ApplicationApiResource) => {
+                const application = new ApplicationMapper().toApp(res);
+                this.setShow(application);
+                return application;
+            }),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    }
 
     updateApplication(id: number, application: Application): Observable<Application> {
         const url = `http://localhost:9025/api/applications/${id}`;
@@ -111,7 +103,6 @@ export class ApplicationStore {
                 return application;
             }),
             catchError((error: HttpErrorResponse) => {
-                console.error('Update failed', error);
                 return throwError(() => error);
             })
         );
