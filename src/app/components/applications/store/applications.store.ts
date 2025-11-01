@@ -80,26 +80,39 @@ export class ApplicationStore {
         );
     }
 
-    async deleteApplication(id: string | number): Promise<ApiErrorResult | boolean>
+    deleteApplication(id: number): Observable<void>
     {
-        const url = 'http://localhost:9025/api/applications/' + Number(id);
-        try {
-            const response = await firstValueFrom(
-                this.http.delete<ApplicationApiResource>(url, {observe: 'response'})
-            );
-            if (response.ok) {
-                this.apiSuccessHandler.handle(response, 'Application deleted successfully.');
-                return true;
-            }
-            return true;
-        } catch (error) {
-            if (error instanceof HttpErrorResponse) {
-                return this.apiErrorHandler.handle(error);
-            }
-            console.error('Unexpected error: ' + error);
-            return false;
-        }
+        const url = `http://localhost:9025/api/applications/${id}`;
+        return this.http.delete<void>(url).pipe(
+            map(() => {
+                return;
+            }),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
     }
+
+//     async deleteApplication(id: string | number): Promise<ApiErrorResult | boolean>
+//     {
+//         const url = 'http://localhost:9025/api/applications/' + Number(id);
+//         try {
+//             const response = await firstValueFrom(
+//                 this.http.delete<ApplicationApiResource>(url, {observe: 'response'})
+//             );
+//             if (response.ok) {
+//                 this.apiSuccessHandler.handle(response, 'Application deleted successfully.');
+//                 return true;
+//             }
+//             return true;
+//         } catch (error) {
+//             if (error instanceof HttpErrorResponse) {
+//                 return this.apiErrorHandler.handle(error);
+//             }
+//             console.error('Unexpected error: ' + error);
+//             return false;
+//         }
+//     }
 
     async storeApplication(application: Application): Promise<ApiErrorResult | boolean> {
         const url = 'http://localhost:9025/api/applications';

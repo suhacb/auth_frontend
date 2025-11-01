@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApplicationDeleteModal } from './application-delete-modal/application-delete-modal';
 import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
 import { Application } from '../contracts/Application';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-index',
@@ -28,17 +29,21 @@ export class Index {
       data: {application: application}
     });
 
-    dialogRef.afterClosed().subscribe(async (result: Application | false) => {
-       if (result && result.id) {
-         // User confirmed deletion — do the deletion in parent
-         await this.store.deleteApplication(result.id).then(() => {
-           this.store.getIndex(); // reload applications index
-         }).catch(error => {
-           
-         });
-       }
-    });
-  }
+  dialogRef.afterClosed().subscribe((result: Application | false) => {
+    if (result && result.id) {
+      // User confirmed deletion — do the deletion in parent
+      this.store.deleteApplication(result.id).pipe(
+        switchMap(() => this.store.getIndex())).subscribe({
+          next: () => {
+            // optionally show success notification
+          },
+          error: (error) => {
+            console.log(error);
+          } 
+      });
+    }
+  });
+}
 
   openApplicationCreateModal() {
     return 
