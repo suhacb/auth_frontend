@@ -26,9 +26,7 @@ export class ApplicationStore {
     readonly show = this._show.asReadonly();
 
     // setters
-    setIndex(response: ApplicationApiResource[]) {
-        this._index.set([]);
-        const applications = response.map(application => new ApplicationMapper().toApp(application));
+    setIndex(applications: Application[]) {
         this._index.set(applications);
     }
 
@@ -36,47 +34,21 @@ export class ApplicationStore {
         this._show.set(application);
     }
 
-    async getIndex(): Promise<ApiErrorResult | boolean> {
-        const url = 'http://localhost:9025/api/applications';
+    getIndex(): Observable<Application[]> {
+    const url = 'http://localhost:9025/api/applications';
 
-        try {
-            const response = await firstValueFrom(
-                this.http.get<ApplicationApiResource[]>(url, { observe: 'response' })
+    return this.http.get<ApplicationApiResource[]>(url).pipe(
+        map((res: ApplicationApiResource[]) => {
+            const applications: Application[] = res.map(
+                (apiApp: ApplicationApiResource) => new ApplicationMapper().toApp(apiApp)
             );
-            const applications = response.body ?? [];
             this.setIndex(applications);
-            this.apiSuccessHandler.handle(response, 'Applications index loaded successfully.');
-            return true;
-        } catch (error) {
-            if (error instanceof HttpErrorResponse) {
-                return this.apiErrorHandler.handle(error);
-            }
-            console.error('Unexpected error: ' + error);
-            return false;
-        }
+            return applications;
+        }),
+            catchError((error: HttpErrorResponse) => {
+            return throwError(() => error);
+        }));
     }
-
-    // async getApplication(id: number): Promise<ApiErrorResult | boolean> {
-    //     const url = 'http://localhost:9025/api/applications/' + id;
-    //     try {
-    //         const response = await firstValueFrom(
-    //             this.http.get<ApplicationApiResource>(url, {observe: 'response'})
-    //         );
-    //         if (response.body) {
-    //             const application = new ApplicationMapper().toApp(response.body);
-    //             this._show.set(application);
-    //             this.apiSuccessHandler.handle(response, 'Application loaded successfully.');
-    //             return true;
-    //         }
-    //         return true;
-    //     } catch (error) {
-    //         if (error instanceof HttpErrorResponse) {
-    //             return this.apiErrorHandler.handle(error);
-    //         }
-    //         console.error('Unexpected error: ' + error);
-    //         return false;
-    //     }
-    // }
 
     getApplication(id: number): Observable<Application> {
         const url = `http://localhost:9025/api/applications/${id}`;

@@ -18,7 +18,6 @@ export class Show {
   backendErrors = signal<Record<string, string[]> | null>(null);
   
   constructor(public store: ApplicationStore, private router: Router) {
-    console.log(this.store.show());
     this.application = this.store.show();
   }
   
