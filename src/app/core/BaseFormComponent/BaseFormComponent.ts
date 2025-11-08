@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, OnInit, Output, signal } from "@angular/core";
+import { Directive, EventEmitter, Input, OnInit, Output, Signal, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
 export type formMode = 'create' | 'show' | 'edit';
@@ -16,7 +16,7 @@ export abstract class BaseFormComponent<T> implements OnInit{
         return this._mode;
     }
     @Input() backendErrors: Record<string, string[]> | null = null;
-    @Output() save = new EventEmitter<T>();
+    @Output() storeOrUpdate = new EventEmitter<T>();
     @Output() cancel = new EventEmitter<void>();
     @Output() modeChange = new EventEmitter<formMode>();
 
@@ -36,7 +36,7 @@ export abstract class BaseFormComponent<T> implements OnInit{
     ngOnChanges(): void {
         // Whenever backendErrors changes, attach to form
         if (this.backendErrors) {
-        this.setBackendErrors(this.backendErrors);
+            this.setBackendErrors(this.backendErrors);
         }
     }
 
@@ -60,8 +60,8 @@ export abstract class BaseFormComponent<T> implements OnInit{
         }
     }
 
-    onSave(): void {
-        this.save.emit(this.getValue());
+    onStoreOrUpdate(): void {
+        this.storeOrUpdate.emit(this.getValue());
     }
 
     private updateMode(mode: formMode) {
@@ -81,18 +81,17 @@ export abstract class BaseFormComponent<T> implements OnInit{
         }
     }
 
-    protected setBackendErrors(errors: Record<string, string[]>): void {
-        if (!this.form) return;
+    protected setBackendErrors(errors: Record<string,string[]>): void {
+    if (!this.form) return;
 
-        for (const key in errors) {
-            if (this.form.controls[key]) {
-                // Attach backend error to the control
-                this.form.controls[key].setErrors({
-                    ...this.form.controls[key].errors,
-                    backend: errors[key].join(' '),
-                });
-            }
+    for (const key in errors) {
+        if (this.form.controls[key]) {
+        this.form.controls[key].setErrors({
+            ...this.form.controls[key].errors,
+            backend: errors[key].join(' '),
+        });
         }
+    }
     }
 
     getError(controlName: string, errorKey: string): string | null {

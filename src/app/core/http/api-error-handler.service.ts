@@ -19,14 +19,13 @@ export class ApiErrorHandlerService {
     constructor(private snackbar: MatSnackBar) {}
 
     handle(error: HttpErrorResponse): ApiErrorResult | false{
-        console.log(error);
-
         if (error.status >= 500) {
             this.showError(`Server error ${error.status}. Please try again later.`);
             return false;
         }
 
         if (error.status === 422) {
+            this.showError(`Error ${error.status}. ${error.statusText}.`);
             // Return structured validation errors
             return {
                 ok: false,

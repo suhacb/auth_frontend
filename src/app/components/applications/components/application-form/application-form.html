@@ -87,7 +87,7 @@
 
         <div class="form-actions">
           @if(mode === 'show') { <button mat-button (click)="enterEditMode()">Edit</button> }
-          @if(mode !== 'show') { <button mat-button color="primary" (click)="onSave()">Save</button> }
+          @if(mode !== 'show') { <button mat-button color="primary" (click)="onStoreOrUpdate()">Save</button> }
           @if(mode !== 'show') { <button mat-button (click)="onCancel()">Cancel</button> }
         </div>
       </form>

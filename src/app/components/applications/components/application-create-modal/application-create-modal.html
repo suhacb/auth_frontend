@@ -1,14 +1,11 @@
 <h2 mat-dialog-title>Create Application</h2>
-<!--
 <mat-dialog-content>
   <app-application-form
-        [application]="application"
-        [mode] = "'create'"
+    #applicationForm
+    [data]="application"
+    [mode] = "mode()"
+    [backendErrors]="backendErrors"
+    (storeOrUpdate)="storeOrUpdateApplication($event)"
+    (cancel)="onCreateApplicationCancel()"
+    (modeChange)="onModeChange($event)"
   ></app-application-form>
-</mat-dialog-content>
--->
-
-<mat-dialog-actions align="end">
-  <button mat-flat-button color="primary" (click)="onCloseClick()">Cancel</button>
-  <button mat-flat-button color="warn" (click)="onCreateApplicationClick()">Save</button>
-</mat-dialog-actions>

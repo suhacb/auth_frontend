@@ -1,13 +1,24 @@
-<!-- <button
-    matButton
-    aria-label="New Application"
-    class="new-application-button"
-    (click)="openApplicationCreateModal()"
-    >
-    <mat-icon>add</mat-icon>
-    Create Application
-</button>
--->
+<div>
+    <button
+        matButton
+        aria-label="New Application"
+        class="new-application-button"
+        (click)="openApplicationCreateModal()"
+        >
+        <mat-icon>add</mat-icon>
+        Create Application
+    </button>
+    <button
+        matButton
+        aria-label="Test"
+        class="new-application-button"
+        (click)="testApi()"
+        >
+        <mat-icon>test</mat-icon>
+        Test API
+    </button>
+</div>
+
 @if(store.index().length > 0) {
     <ng-container>
         <app-application-index [applications]="store.index()" (onShowEvent)="show($event)" (onDeleteEvent)="confirmDelete($event)"></app-application-index>

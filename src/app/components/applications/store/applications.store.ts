@@ -1,10 +1,11 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
+import { catchError, EMPTY, firstValueFrom, map, Observable, tap, throwError } from 'rxjs';
 import { ApiSuccessHandlerService } from '../../../core/http/api-success-handler.service';
 import { ApiErrorHandlerService, ApiErrorResult } from '../../../core/http/api-error-handler.service';
 import { Application, ApplicationApiPayload, ApplicationApiResource } from '../contracts/Application';
 import { ApplicationMapper } from '../models/ApplicationMapper';
+import { toSignal } from '@angular/core/rxjs-interop';
 // import { Application } from '../models/application';
 // import { ApplicationApiResource } from '../contracts/ApplicationApiResource';
 // import { ApplicationResource } from '../contracts/ApplicationResource';
@@ -80,57 +81,86 @@ export class ApplicationStore {
         );
     }
 
-    deleteApplication(id: number): Observable<void>
+    deleteApplication(application: Application, options = {observe: 'response'}): Observable<HttpResponse<any>>
     {
-        const url = `http://localhost:9025/api/applications/${id}`;
-        return this.http.delete<void>(url).pipe(
-            map(() => {
-                return;
+        const url = `http://localhost:9025/api/applications/${application.id}`;
+        return this.http.delete<HttpResponse<any>>(url);
+    }
+
+    storeApplication(application: Application): Observable<HttpResponse<any>> {
+        const url = 'http://localhost:9025/api/applications';
+        const payload = new ApplicationMapper().toApi(application);
+        return this.http.post<ApplicationApiResource>(url, payload, {observe: 'response'}).pipe(
+            tap((response: HttpResponse<ApplicationApiResource>) => {
+                this.apiSuccessHandler.handle(response, `Application ${response.body?.name} created successfully.`);
             }),
             catchError((error: HttpErrorResponse) => {
-                return throwError(() => error);
+                const handled = this.apiErrorHandler.handle(error);
+
+                // Re-throw all errors to let the Page handle 422 or others if needed
+                if (error.status === 422) {
+                    return throwError(() => error);
+                }
+
+                return EMPTY;
             })
         );
     }
 
-//     async deleteApplication(id: string | number): Promise<ApiErrorResult | boolean>
-//     {
-//         const url = 'http://localhost:9025/api/applications/' + Number(id);
-//         try {
-//             const response = await firstValueFrom(
-//                 this.http.delete<ApplicationApiResource>(url, {observe: 'response'})
-//             );
-//             if (response.ok) {
-//                 this.apiSuccessHandler.handle(response, 'Application deleted successfully.');
-//                 return true;
-//             }
-//             return true;
-//         } catch (error) {
-//             if (error instanceof HttpErrorResponse) {
-//                 return this.apiErrorHandler.handle(error);
-//             }
-//             console.error('Unexpected error: ' + error);
-//             return false;
-//         }
-//     }
-
-    async storeApplication(application: Application): Promise<ApiErrorResult | boolean> {
-        const url = 'http://localhost:9025/api/applications';
-        try {
-            const response = await firstValueFrom(
-                this.http.post<ApplicationApiResource>(url, new ApplicationMapper().toApi(application), {observe: 'response'})
-            );
-            if (response.ok) {
-                this.apiSuccessHandler.handle(response, 'Application created successfully.');
-                return true;
-            }
-            return true;
-        } catch (error) {
-            if (error instanceof HttpErrorResponse) {
-                return this.apiErrorHandler.handle(error);
-            }
-            console.error('Unexpected error: ' + error);
-            return false;
-        }
+    testApi(application: Application, options = {observe: 'response'}): void {
+        console.log('testApi');
     }
+    // testApi(application: Application, options = {observe: 'response'}): void {
+    //     const url = `http://localhost:9025/api/applications/${application.id}`;
+    //     toSignal<Application>(this.sendRequest<ApplicationApiResource, Application>('GET', url, new ApplicationMapper()));
+// 
+    //     // console.log(response);
+    //     // const response = this.handleResponse<ApplicationApiResource>(observable);
+    //     // this.sendRequest<Application>('POST', url, application);
+    //     // this.sendRequest<Application>('DELETE', url);
+    //     // this.sendRequest<Application>('PUT', url, application);
+    //     // const observable: Observable<HttpResponse<ApplicationApiResource>> = this.http.get<ApplicationApiResource>(url, {observe: 'response'});
+    //     // this.handleResponse(observable);
+    //     // return observable;
+    // }
+// 
+    // private sendRequest<apiStructure, appStructure>(
+    //     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    //     url: string,
+    //     mapper: any,
+    //     payload?: appStructure
+    // ): appStructure {
+    //     let options: {
+    //         observe: 'response';
+    //         body?: any;
+    //     } = { observe: 'response' };
+    //     if ((method === 'POST' || method === 'PUT')) {
+    //         options.body = mapper.toApi(payload);
+    //     }
+// 
+    //     const response: Observable<HttpResponse<apiStructure>> = this.http.request<apiStructure>(method, url, options);
+    //     response.subscribe({
+    //         next: (response: HttpResponse<apiStructure>): appStructure => {
+    //             return mapper.toApp(response.body);
+    //         },
+    //         error: (error) => {
+    //             console.log(error);
+    //         }
+    //     });
+    // }
+
+    // private handleResponse<apiResponseStructure>(observable: Observable<HttpEvent<HttpResponse<apiResponseStructure>>>) {
+    //     // show API returns instance of application as ApplicationApiResource
+    //     // index API returns an array of applications as ApplicationApiResource[]
+    //     // update API returns instance of application as ApplicationApiResource
+    //     // delete API returns null
+    //     // store API returns instance of application as ApplicationApiResource
+    //     observable.subscribe((response) => {
+    //         if (response.ok) {
+    //             console.log('response ok');
+    //         } else {
+    //             console.log('error');
+    //         }
+    //     });
+    // }
 }
