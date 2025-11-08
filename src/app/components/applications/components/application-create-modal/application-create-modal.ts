@@ -27,25 +27,8 @@ export class ApplicationCreateModal {
     this.storeApplication.emit(newApplication);
   }
 
-  onUpdate(newApplication: Application) {
-    this.storeApplication.emit(newApplication);
-  }
-
   onCreateApplicationCancel() {
     this.cancelCreateApplication.emit();
-  }
-
-  onModeChange(mode: 'show' | 'edit' | 'create') {
-    console.log('mode change');
-  }
-
-  onCloseClick(): void {
-    this.dialogRef.close(false);
-  }
-
-  onCreateApplicationClick(): void {
-    // const application = new ApplicationMapper().toApp(this.applicationForm.getValue());
-    // this.dialogRef.close(new ApplicationMapper().toApi(application));
   }
 
   getError(field: string): string | null {

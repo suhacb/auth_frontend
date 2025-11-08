@@ -1,5 +1,5 @@
 <mat-list>
-    <mat-list-item *ngFor="let application of applications"  (dblclick)="onShowClick(application.id)">
+    <mat-list-item *ngFor="let application of applications"  (dblclick)="onShowClick(application)">
         <div class="record-container">
         <!-- Left Section -->
         <div class="left-section">
@@ -14,7 +14,7 @@
 
         <!-- Right Section -->
         <div class="right-section">
-            <button mat-icon-button (click)="onShowClick(application.id); $event.stopPropagation()"  aria-label="Show">
+            <button mat-icon-button (click)="onShowClick(application); $event.stopPropagation()"  aria-label="Show">
                 <mat-icon>visibility</mat-icon>
             </button>
             <button mat-icon-button (click)="onDeleteClick(application); $event.stopPropagation()"  aria-label="Delete">

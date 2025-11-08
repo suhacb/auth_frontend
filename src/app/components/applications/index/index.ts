@@ -21,17 +21,17 @@ export class Index {
   public backendErrors: Record<string, string[]> | null = null;
   constructor(public store: ApplicationStore, private router: Router, private dialog: MatDialog, private dialogService: DialogService) {}
 
-  async show(id: number): Promise<void> {
-    this.router.navigate(['/applications', id]);
+  show(application: Application): void {
+    this.router.navigate(['/applications', application.id]);
   }
 
-  confirmDelete(application: Application): void {
+  handleApplicationDelete(application: Application): void {
     this.dialogService.openFormDialog({
       component: ApplicationDeleteModal,
       data: {application},
       submit: (application: Application) => this.store.deleteApplication(application, {observe: 'response'}),
       reload: () => this.store.getIndex(),
-      successMessage: 'Application deleted'
+      successMessage: `Application ${application.name} deleted.`
     });
   }
 
@@ -47,7 +47,7 @@ export class Index {
       this.handleStoreApplication(newApplication, dialogRef);
     });
 
-    modalInstance.cancelCreateApplication.subscribe((newApplication: Application) => {
+    modalInstance.cancelCreateApplication.subscribe(() => {
       this.handleCancelCreateApplication(dialogRef);
     });
   }
@@ -68,7 +68,6 @@ export class Index {
         if (modal) {
           modal.componentInstance.backendErrors = this.backendErrors;
         }
-        console.log(error);
       })
     });
   }
@@ -84,50 +83,5 @@ export class Index {
         dialogRef.close();
       }
     });
-  }
-
-  // openApplicationCreateModal() {
-  //   console.log('openApplicationCreateModal');
-  //   const dialogRef = this.dialog.open(ApplicationCreateModal, {
-  //     width: '800px',
-  //     disableClose: true, // user cannot close by clicking outside
-  //     data: {
-  //       backendErrors: this.backendErrors()
-  //     }
-  //   });
-// 
-  //   const createApplicationModal = dialogRef.componentInstance;
-  //   createApplicationModal.storeApplication.subscribe((newApplication: Application) => {
-  //     this.store.storeApplication(newApplication).pipe(
-  //       switchMap(() => this.store.getIndex())
-  //     ).subscribe({
-  //       next: () => {
-  //         dialogRef.close();
-  //       },
-  //       error: (error) => {
-  //         if (error.status === 422 && error.error?.errors) {
-  //           this.backendErrors.set(FormErrorMapper.toCamelCase(error.error.errors)); // set field-level errors
-  //         } else {
-  //           console.error(error);
-  //         }
-  //       }
-  //     });
-  //   })
-  // }
-  //      dialogRef.afterClosed().subscribe(async (result: Application) => {
-  //         if (result) {
-  //           // User confirmed create application — do the store in parent
-  //           await this.store.storeApplication(result).then(() => {
-  //             this.store.getIndex(); // reload applications index
-  //           }).catch(error => {
-  //             
-  //           });
-  //         }
-  //      });
-
-  testApi(){
-    let application = new ApplicationMapper().make();
-    application.id = 1;
-    const response = this.store.testApi(application);
   }
 }

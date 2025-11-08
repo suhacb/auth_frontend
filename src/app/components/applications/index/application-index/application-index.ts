@@ -9,12 +9,12 @@ import { Application } from '../../contracts/Application';
 })
 export class ApplicationIndex {
   @Input() applications: Application[] = [];
-  @Output() onShowEvent = new EventEmitter<number>();
+  @Output() onShowEvent = new EventEmitter<Application>();
   @Output() onDeleteEvent = new EventEmitter<Application>();
 
-  onShowClick(id: number | null) {
-    if (id) {
-      this.onShowEvent.emit(id);
+  onShowClick(application: Application | null) {
+    if (application) {
+      this.onShowEvent.emit(application);
     }
   }
 
