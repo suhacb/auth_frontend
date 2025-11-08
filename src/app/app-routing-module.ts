@@ -6,11 +6,11 @@ import { AuthGuard } from './guards/auth-guard';
 import { GuestGuard } from './guards/guest-guard';
 import { AuthLayout } from './auth-layout/auth-layout';
 import { Home } from './home/home';
-import { Applications } from './components/applications/applications';
-import { Index } from './components/applications/index';
-import { Show } from './components/applications/show/show';
-import { ApplicationsResolver } from './components/applications/resolvers/ApplicationsResolver';
-import { ApplicationResolver } from './components/applications/resolvers/ApplicationResolver';
+import { Applications } from './modules/applications/applications';
+import { Index } from './modules/applications/index/index';
+import { Show } from './modules/applications/show/show';
+import { ApplicationsResolver } from './modules/applications/resolvers/ApplicationsResolver';
+import { ApplicationResolver } from './modules/applications/resolvers/ApplicationResolver';
 
 const routes: Routes = [
   {

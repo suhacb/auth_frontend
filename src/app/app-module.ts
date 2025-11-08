@@ -28,23 +28,23 @@ import { Home } from './home/home';
 import { LogoutModal } from './modals/logout-modal/logout-modal';
 // Material modules
 import { MatDialogModule } from '@angular/material/dialog';
-import { Applications } from './components/applications/applications';
+import { Applications } from './modules/applications/applications';
 import { MainMenu } from './auth-layout/main-menu/main-menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { Index } from './components/applications/index/index';
-import { Show } from './components/applications/show/show';
+import { Index } from './modules/applications/index/index';
+import { Show } from './modules/applications/show/show';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
-import { ApplicationForm } from './components/applications/components/application-form/application-form';
+import { ApplicationForm } from './modules/applications/components/application-form/application-form';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { ApplicationIndex } from './components/applications/index/application-index/application-index';
-import { ApplicationDeleteModal } from './components/applications/index/application-delete-modal/application-delete-modal';
-import { ApplicationCreateModal } from './components/applications/components/application-create-modal/application-create-modal';
-import { ApplicationCreateCancelModal } from './components/applications/index/application-create-cancel-modal/application-create-cancel-modal';
-import { ApplicationUpdateConfirmModal } from './components/applications/show/application-update-confirm-modal/application-update-confirm-modal';
-import { ApplicationUpdateCancelModal } from './components/applications/show/application-update-cancel-modal/application-update-cancel-modal';
+import { ApplicationIndex } from './modules/applications/index/application-index/application-index';
+import { ApplicationDeleteModal } from './modules/applications/index/application-delete-modal/application-delete-modal';
+import { ApplicationCreateModal } from './modules/applications/components/application-create-modal/application-create-modal';
+import { ApplicationCreateCancelModal } from './modules/applications/index/application-create-cancel-modal/application-create-cancel-modal';
+import { ApplicationUpdateConfirmModal } from './modules/applications/show/application-update-confirm-modal/application-update-confirm-modal';
+import { ApplicationUpdateCancelModal } from './modules/applications/show/application-update-cancel-modal/application-update-cancel-modal';
 
 @NgModule({
   declarations: [
