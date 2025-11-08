@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Test } from './test/test';
-import { Login } from './login/login';
+import { Login } from './modules/login/pages/login';
 import { AuthGuard } from './guards/auth-guard';
 import { GuestGuard } from './guards/guest-guard';
 import { AuthLayout } from './auth-layout/auth-layout';

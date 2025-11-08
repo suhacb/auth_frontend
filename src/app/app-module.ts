@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule, MatFabButton, MatMiniFabButton } from '@angular/material/button';
 import { Test } from './test/test';
 import { MatMenuModule } from '@angular/material/menu';
-import { Login } from './login/login';
+import { Login } from './modules/login/pages/login';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -25,7 +25,7 @@ import { SnackbarSuccessComponent } from './shared/snackbar-success/snackbar-suc
 import { appHeadersInterceptor } from './core/http/headers.interceptor';
 import { AuthLayout } from './auth-layout/auth-layout';
 import { Home } from './home/home';
-import { LogoutModal } from './modals/logout-modal/logout-modal';
+
 // Material modules
 import { MatDialogModule } from '@angular/material/dialog';
 import { Applications } from './modules/applications/applications';
@@ -54,7 +54,6 @@ import { SnackBarComponent } from './core/SnackBarComponent/snack-bar-component'
     SnackbarSuccessComponent,
     AuthLayout,
     Home,
-    LogoutModal,
     Applications,
     MainMenu,
     ApplicationsIndex,

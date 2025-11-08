@@ -1,10 +1,10 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
-import { AuthStore } from '../store/auth.store';
+import { AuthStore } from '../modules/login/store/auth.store';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { LogoutModal } from '../modals/logout-modal/logout-modal';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { APP_CONFIG } from '../config/app-config';
+import { ConfirmCancelDialog } from '../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
   selector: 'app-auth-layout',
@@ -13,8 +13,6 @@ import { APP_CONFIG } from '../config/app-config';
   styleUrl: './auth-layout.scss',
 })
 export class AuthLayout {
-  public showLogoutModal = false;
-
   constructor(
     public store: AuthStore,
     private router: Router,
@@ -24,32 +22,39 @@ export class AuthLayout {
   public cfg = inject(APP_CONFIG);
 
   openLogoutModal() {
-    this.dialog.open(LogoutModal, {
-      width: '400px',
-      disableClose: true // user cannot close by clicking outside
+    const dialogRef = this.dialog.open(ConfirmCancelDialog, {
+      width: '600px',
+      disableClose: true,
+      data: {
+        title: 'Logout',
+        content: 'Dou you want to logout?'
+      }
+    });
+
+    const modalInstance = dialogRef.componentInstance;
+    modalInstance.confirm.subscribe(() => {
+      this.logout(dialogRef);
+    });
+    modalInstance.cancel.subscribe(() => {
+      dialogRef.close();
     });
   }
-  closeLogoutModal() { this.showLogoutModal = false; }
   
   @ViewChild('sidenav') sidenav!: MatSidenav;
-
 
   toggleMainMenuSidebar() {
     this.sidenav.toggle();
   }
 
-  async logout() {
-    try {
-      const result = await this.store.logout();
-
-      if (result === true) {
-        // Successful logout
+  logout(dialogRef: MatDialogRef<ConfirmCancelDialog>) {
+    this.store.logout().subscribe({
+      next: () => {
+        dialogRef.close();
         this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      this.showLogoutModal = false;
-    }
-  }
+    });
+  };
 }

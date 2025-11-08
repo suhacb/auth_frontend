@@ -2,12 +2,10 @@ import { Component, Injectable, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient, HttpErrorResponse, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackbarErrorComponent } from '../shared/snackbar-error/snackbar-error';
-import { SnackbarSuccessComponent } from '../shared/snackbar-success/snackbar-success';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { AppStore } from '../store/app.store';
-import { Token } from './token';
-import { applyValidationErrors } from '../core/http/form-error-helper';
+import { Token } from '../token';
+// import { applyValidationErrors } from '../../core/http/form-error-helper';
+import { AuthStore } from '../store/auth.store';
 
 
 @Component({
@@ -28,7 +26,7 @@ export class Login implements OnInit {
     private http: HttpClient,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
-    public store: AppStore,
+    public store: AuthStore,
     private router: Router
   ) { }
 
@@ -43,17 +41,23 @@ export class Login implements OnInit {
     });
   }
 
-  async onSubmit() {
-    const result = await this.store.auth.login(this.loginForm.value.username, this.loginForm.value.password);
+  onSubmit() {
+    const result = this.store.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        const errors = error.error.errors;
+        this.loginForm.setErrors(error.error.errors);
+        if (errors.username) {
+          this.loginForm.get('username')?.setErrors({ backend: errors.username });
+        }
 
-    if (result === true) {
-      this.router.navigate(['/']);
-      return;
-    }
-
-    if (result && typeof result === 'object' && result.validationErrors) {
-      applyValidationErrors(this.loginForm, result.validationErrors);
-    }
+        if (errors.password) {
+          this.loginForm.get('password')?.setErrors({ backend: errors.password });
+        }
+      }
+    });
   }
 
 }

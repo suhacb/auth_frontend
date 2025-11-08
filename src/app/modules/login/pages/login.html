@@ -8,16 +8,16 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Username</mat-label>
                     <input matInput formControlName="username">
-                    @if(loginForm.get('username')?.getError('server')) {
-                        <mat-error >{{loginForm.get('username')?.getError('server')}}</mat-error>
+                    @if(loginForm.get('username')?.getError('backend')) {
+                        <mat-error >{{loginForm.get('username')?.getError('backend')}}</mat-error>
                     }
                 </mat-form-field>
     
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Password</mat-label>
                     <input matInput type="password" formControlName="password" />
-                    @if(loginForm.get('password')?.getError('server')) {
-                        <mat-error>{{loginForm.get('password')?.getError('server')}}</mat-error>
+                    @if(loginForm.get('password')?.getError('backend')) {
+                        <mat-error>{{loginForm.get('password')?.getError('backend')}}</mat-error>
                     }
                 </mat-form-field>
     

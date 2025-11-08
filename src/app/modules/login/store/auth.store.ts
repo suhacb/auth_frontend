@@ -1,15 +1,19 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { Token } from '../login/token';
+import { Token } from '../token';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-import { ApiErrorHandlerService, ApiErrorResult } from '../core/http/api-error-handler.service';
-import { decodeJwt } from '../core/jwt/decodeJwt';
-import { ApiSuccessHandlerService } from '../core/http/api-success-handler.service';
+import { catchError, EMPTY, firstValueFrom, map, Observable, tap, throwError } from 'rxjs';
+import { decodeJwt } from '../../../core/jwt/decodeJwt';
+import { ApiHandlerService } from '../../../core/http/api-handler-service';
+import { AccessToken, AccessTokenApiResource } from '../contracts/AccessToken';
+import { AccessTokenMapper } from '../models/AccessTokenMapper';
 
 @Injectable({ providedIn: 'root' })
 
 export class AuthStore {
-    constructor(private http: HttpClient, private apiErrorHandler: ApiErrorHandlerService, private apiSuccessHandler: ApiSuccessHandlerService) {}
+    constructor(
+        private http: HttpClient,
+        private apiHandlerService: ApiHandlerService
+    ) {}
 
     private _accessToken = signal<string | null>(null);
     private _tokenType = signal<string | null>(null);
@@ -53,7 +57,7 @@ export class AuthStore {
     });
 
     // setters
-    setToken(token: Token | null = null) {
+    setToken(token: AccessToken | null = null) {
         this.setAccessToken(token ? token.accessToken : null);
         this.setTokenType(token ? token.tokenType : null);
         this.setExpiresIn(token ? token.expiresIn : null);
@@ -114,71 +118,54 @@ export class AuthStore {
         this.setToken();
     }
 
-    async login(username: string, password: string): Promise<true | ApiErrorResult | false> {
+    login (username: string, password: string): Observable<AccessToken> {
         const url = 'http://localhost:9025/api/auth/login';
         const body = {username, password};
-
-        try {
-            const response = await firstValueFrom(
-                this.http.post(url, body, { observe: 'response' })
-            );
-            const token = new Token(response.body);
-            this.setToken(token);
-            this.apiSuccessHandler.handle(response, 'Login successful.');
-            return true;
-        } catch (error) {
-            if (error instanceof HttpErrorResponse) {
-                return this.apiErrorHandler.handle(error);
-            }
-            console.error('Unexpected error: ' + error);
-            return false;
-        }
+        return this.http.post<AccessTokenApiResource>(url, body, { observe: 'response' as const}).pipe(
+            tap(response => {
+                this.apiHandlerService.showSuccess('Login successful.');
+            }),
+            map((response) => {
+                if (!response.body) throw new Error('Response body is empty');
+                const accessToken = new AccessTokenMapper().toApp(response.body);
+                this.setToken(accessToken);
+                return accessToken;
+            }),
+            catchError((error: HttpErrorResponse) => {
+                this.apiHandlerService.showError(error);
+                if (error.status === 401 || error.status === 422) return throwError(() => error);
+                return EMPTY;
+            })
+        );
     }
 
-    async logout(): Promise<true | ApiErrorResult | false> {
-        const url = 'http://localhost:9025/api/auth/logout';
-
-        try {
-            const response = await firstValueFrom(
-                // this.http.post(url, [], {headers, observe: 'response'})
-                this.http.post(url, [], {observe: 'response'})
-            );
-            this.resetToken();
-            this.apiSuccessHandler.handle(response, 'You are signed out.');
-            return true;
-        } catch (error) {
-            if (error instanceof HttpErrorResponse) {
-                return this.apiErrorHandler.handle(error);
-            }
-            console.error('Unexpected error: ' + error);
-            return false;
-        }
-    }
-
-    async validateAccessToken(): Promise<boolean | ApiErrorResult | Token> {
+    validateAccessToken(): Observable<boolean> {
         const url = 'http://localhost:9025/api/auth/validate-access-token';
-
-        try {
-            const response = await firstValueFrom(
-                this.http.get(url)
-            );
-
-            // Attempt to wrap in AccessToken and set token in store/localStorage
-            if ('access_token' in response) {
-                const token = new Token(response);
-                this.setToken(token);
-                return token;
-            }
-            
-            return true;
-        } catch (error) {
-            if (error instanceof HttpErrorResponse) {
-                this.apiErrorHandler.handle(error);
+        return this.http.get<AccessTokenApiResource | boolean>(url, { observe: 'response' as const}).pipe(
+            map((response) => {
+                if (!response.body) throw new Error('Response body is empty');
+                if (response.body === true) {
+                    return response.body;
+                }
+                if ('access_token' in response.body) {
+                    const accessToken = new AccessTokenMapper().toApp(response.body);
+                    this.setToken(accessToken);
+                    return true;
+                }
                 return false;
-            }
-            console.error('Unexpected error: ' + error);
-            return false;
-        }
+            })
+        );
+    }
+
+    logout(): Observable<boolean> {
+        const url = 'http://localhost:9025/api/auth/logout';
+        return this.http.post<boolean>(url, [], { observe: 'response' as const}).pipe(
+            map(() => {
+                this.resetToken();
+                this.apiHandlerService.showSuccess('You are logged out.');
+                return true;
+            })
+        );
     }
 
     private setLocalStorage(key: string, value: string | number | null): void {
