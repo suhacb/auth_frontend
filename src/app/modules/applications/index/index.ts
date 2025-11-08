@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
 import { Application } from '../contracts/Application';
-import { ApplicationCreateCancelModal } from './application-create-cancel-modal/application-create-cancel-modal';
 import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
@@ -33,7 +32,7 @@ export class Index {
       }
     });
 
-    // Subscribe to events (save and cancel)
+    // Subscribe to events (confirm and cancel)
     const modalInstance = dialogRef.componentInstance;
     modalInstance.confirm.subscribe(() => {
       this.handleApplicationDelete(application, dialogRef);
@@ -71,35 +70,61 @@ export class Index {
   }
 
   handleApplicationStore(newApplication: Application, dialogRef: MatDialogRef<ApplicationCreateModal>): void {
-    this.store.storeApplication(newApplication).subscribe({
-      next: (() => {
-        this.store.getIndex().subscribe();
-        dialogRef.close();
-      }),
-      error: (error => {
-        this.backendErrors = error.error.errors || {};
+    const confirmCancelDialogRef = this.dialog.open(ConfirmCancelDialog, {
+      width: '600px',
+      disableClose: true,
+      data: {
+        title: 'Create Application',
+        content: 'Do you want to create new application?'
+      }
+    });
 
-        // Pass errors to modal instance if open
-        const modal = this.dialog.openDialogs.find(
-          d => d.componentInstance instanceof ApplicationCreateModal
-        );
-        if (modal) {
-          modal.componentInstance.backendErrors = this.backendErrors;
-        }
-      })
+    const modalInstance = confirmCancelDialogRef.componentInstance;
+    modalInstance.confirm.subscribe(() => {
+       this.store.storeApplication(newApplication).subscribe({
+        next: (() => {
+          this.store.getIndex().subscribe();
+          confirmCancelDialogRef.close();
+          dialogRef.close();
+        }),
+        error: (error => {
+          this.backendErrors = error.error.errors || {}; 
+          // Pass errors to modal instance if open
+          const modal = this.dialog.openDialogs.find(
+            d => d.componentInstance instanceof ApplicationCreateModal
+          );
+          if (modal) {
+            modal.componentInstance.backendErrors = this.backendErrors;
+          }
+          confirmCancelDialogRef.close();
+        })
+      });
+    });
+
+    modalInstance.cancel.subscribe(() => {
+      confirmCancelDialogRef.close();
     });
   }
 
   handleCancelApplicationCreate(dialogRef: MatDialogRef<ApplicationCreateModal>) {
-    const confirmDialogRef = this.dialog.open(ApplicationCreateCancelModal, {
+    const confirmCancelDialogRef = this.dialog.open(ConfirmCancelDialog, {
       width: '600px',
-      disableClose: true
+      disableClose: true,
+      data: {
+        title: 'Cancel Create Application',
+        content: 'Do you want to cancel creating an application? The data you entered will be lost.'
+      }
     });
 
-    confirmDialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
-        dialogRef.close();
-      }
+    // Subscribe to events (confirm and cancel)
+    const modalInstance = confirmCancelDialogRef.componentInstance;
+    modalInstance.confirm.subscribe(() => {
+      confirmCancelDialogRef.close();
+      dialogRef.close();
+    });
+    
+    modalInstance.cancel.subscribe(() => {
+      confirmCancelDialogRef.close();
     });
   }
 }
