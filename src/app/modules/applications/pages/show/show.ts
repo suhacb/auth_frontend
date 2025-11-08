@@ -1,11 +1,11 @@
 import { Component, signal, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationStore } from '../store/applications.store';
-import { ApplicationForm } from '../components/application-form/application-form';
-import { Application } from '../contracts/Application';
-import { ApplicationMapper } from '../models/ApplicationMapper';
+import { ApplicationStore } from '../../store/applications.store';
+import { ApplicationForm } from '../../components/application-form/application-form';
+import { Application } from '../../contracts/Application';
+import { ApplicationMapper } from '../../models/ApplicationMapper';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
+import { ConfirmCancelDialog } from '../../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
   selector: 'app-show',
@@ -13,7 +13,7 @@ import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-c
   templateUrl: './show.html',
   styleUrl: './show.scss'
 })
-export class Show {
+export class ApplicationsShow {
   /**
    * Reactive signal tracking the current mode of the form.
    * Possible values:

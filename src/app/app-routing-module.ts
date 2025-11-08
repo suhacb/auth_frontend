@@ -7,8 +7,8 @@ import { GuestGuard } from './guards/guest-guard';
 import { AuthLayout } from './auth-layout/auth-layout';
 import { Home } from './home/home';
 import { Applications } from './modules/applications/applications';
-import { Index } from './modules/applications/index/index';
-import { Show } from './modules/applications/show/show';
+import { ApplicationsIndex } from './modules/applications/pages/index/index';
+import { ApplicationsShow } from './modules/applications/pages/show/show';
 import { ApplicationsResolver } from './modules/applications/resolvers/ApplicationsResolver';
 import { ApplicationResolver } from './modules/applications/resolvers/ApplicationResolver';
 
@@ -35,13 +35,13 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            component: Index,
+            component: ApplicationsIndex,
             canActivate: [AuthGuard],
             resolve: { ApplicationsResolver }
           },
           {
             path: ':id',
-            component: Show,
+            component: ApplicationsShow,
             canActivate: [AuthGuard],
             resolve: { ApplicationResolver }
           },

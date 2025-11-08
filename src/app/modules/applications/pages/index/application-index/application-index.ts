@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Application } from '../../contracts/Application';
+import { Application } from '../../../contracts/Application';
 
 @Component({
   selector: 'app-application-index',

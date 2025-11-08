@@ -1,11 +1,11 @@
 // import { Component, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
-import { ApplicationStore } from '../store/applications.store';
+import { ApplicationStore } from '../../store/applications.store';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
-import { Application } from '../contracts/Application';
-import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
+import { ApplicationCreateModal } from '../../components/application-create-modal/application-create-modal';
+import { Application } from '../../contracts/Application';
+import { ConfirmCancelDialog } from '../../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
   selector: 'app-index',
@@ -13,7 +13,7 @@ import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-c
   templateUrl: './index.html',
   styleUrl: './index.scss',
 })
-export class Index {
+export class ApplicationsIndex {
   /** Backend validation errors from the API */
   public backendErrors: Record<string, string[]> | null = null;
 

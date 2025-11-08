@@ -32,14 +32,14 @@ import { Applications } from './modules/applications/applications';
 import { MainMenu } from './auth-layout/main-menu/main-menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { Index } from './modules/applications/index/index';
-import { Show } from './modules/applications/show/show';
+import { ApplicationsIndex } from './modules/applications/pages/index/index';
+import { ApplicationsShow } from './modules/applications/pages/show/show';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
 import { ApplicationForm } from './modules/applications/components/application-form/application-form';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { ApplicationIndex } from './modules/applications/index/application-index/application-index';
+import { ApplicationIndex } from './modules/applications/pages/index/application-index/application-index';
 import { ApplicationCreateModal } from './modules/applications/components/application-create-modal/application-create-modal';
 import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-dialog';
 
@@ -56,8 +56,8 @@ import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-d
     LogoutModal,
     Applications,
     MainMenu,
-    Index,
-    Show,
+    ApplicationsIndex,
+    ApplicationsShow,
     ApplicationForm,
     ApplicationIndex,
     ApplicationCreateModal,
