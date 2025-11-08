@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AppStore } from '../store/app.store';
+import { AuthStore } from '../login/store/auth.store';
 
 @Component({
   selector: 'app-test',
@@ -8,6 +8,6 @@ import { AppStore } from '../store/app.store';
   standalone: false
 })
 export class Test {
-  constructor(public store: AppStore) {}
+  constructor(public store: AuthStore) {}
 
 }

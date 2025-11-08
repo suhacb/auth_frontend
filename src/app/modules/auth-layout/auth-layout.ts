@@ -1,10 +1,10 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
-import { AuthStore } from '../modules/login/store/auth.store';
+import { AuthStore } from '../login/store/auth.store';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
-import { APP_CONFIG } from '../config/app-config';
-import { ConfirmCancelDialog } from '../core/ConfirmCancelDialog/confirm-cancel-dialog';
+import { APP_CONFIG } from '../../config/app-config';
+import { ConfirmCancelDialog } from '../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
   selector: 'app-auth-layout',
