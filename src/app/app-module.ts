@@ -40,7 +40,6 @@ import { ApplicationForm } from './modules/applications/components/application-f
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ApplicationIndex } from './modules/applications/index/application-index/application-index';
-import { ApplicationDeleteModal } from './modules/applications/index/application-delete-modal/application-delete-modal';
 import { ApplicationCreateModal } from './modules/applications/components/application-create-modal/application-create-modal';
 import { ApplicationCreateCancelModal } from './modules/applications/index/application-create-cancel-modal/application-create-cancel-modal';
 import { ApplicationUpdateConfirmModal } from './modules/applications/show/application-update-confirm-modal/application-update-confirm-modal';
@@ -64,7 +63,6 @@ import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-d
     Show,
     ApplicationForm,
     ApplicationIndex,
-    ApplicationDeleteModal,
     ApplicationCreateModal,
     ApplicationCreateCancelModal,
     ApplicationUpdateConfirmModal,

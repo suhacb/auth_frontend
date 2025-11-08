@@ -3,10 +3,8 @@ import { Component } from '@angular/core';
 import { ApplicationStore } from '../store/applications.store';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDeleteModal } from './application-delete-modal/application-delete-modal';
 import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
 import { Application } from '../contracts/Application';
-import { DialogService } from '../../../core/DialogService/DialogService';
 import { ApplicationCreateCancelModal } from './application-create-cancel-modal/application-create-cancel-modal';
 import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
@@ -19,7 +17,7 @@ import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-c
 
 export class Index {
   public backendErrors: Record<string, string[]> | null = null;
-  constructor(public store: ApplicationStore, private router: Router, private dialog: MatDialog, private dialogService: DialogService) {}
+  constructor(public store: ApplicationStore, private router: Router, private dialog: MatDialog) {}
 
   show(application: Application): void {
     this.router.navigate(['/applications', application.id]);
