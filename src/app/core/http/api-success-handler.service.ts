@@ -1,7 +1,7 @@
 import { HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { SnackbarSuccessComponent } from "../../shared/snackbar-success/snackbar-success";
+import { SnackBarComponent } from "../SnackBarComponent/snack-bar-component";
 
 export interface ValidationErrorsMap {
     [field: string]: string | string[];
@@ -24,12 +24,14 @@ export class ApiSuccessHandlerService {
     }
 
     private showSuccess(message: string) {
-        this.snackbar.openFromComponent(SnackbarSuccessComponent, {
-            data: { message },
+        this.snackbar.openFromComponent(SnackBarComponent, {
+            data: {  
+                message,
+                type: 'success'
+            },
             duration: 8000,
             horizontalPosition: 'right',
             verticalPosition: 'bottom',
-            panelClass: ['snackbar-success'],
         });
     }
 }

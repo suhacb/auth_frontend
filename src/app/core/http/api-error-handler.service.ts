@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { SnackbarErrorComponent } from "../../shared/snackbar-error/snackbar-error";
+import { SnackBarComponent } from "../SnackBarComponent/snack-bar-component";
 
 export interface ValidationErrorsMap {
     [field: string]: string | string[];
@@ -67,12 +67,15 @@ export class ApiErrorHandlerService {
     }
 
     private showError(message: string) {
-        this.snackbar.openFromComponent(SnackbarErrorComponent, {
-            data: { message },
+        this.snackbar.openFromComponent(SnackBarComponent, {
+            data: {  
+                message,
+                type: 'error'
+            },
             duration: 8000,
             horizontalPosition: 'right',
             verticalPosition: 'bottom',
-            panelClass: ['snackbar-error'],
         });
+
     }
 }

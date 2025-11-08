@@ -1,17 +1,15 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { catchError, EMPTY, map, Observable, tap, throwError } from 'rxjs';
-import { ApiSuccessHandlerService } from '../../../core/http/api-success-handler.service';
-import { ApiErrorHandlerService } from '../../../core/http/api-error-handler.service';
 import { Application, ApplicationApiResource } from '../contracts/Application';
 import { ApplicationMapper } from '../models/ApplicationMapper';
+import { ApiHandlerService } from '../../../core/http/api-handler-service';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationStore {
     constructor(
         private http: HttpClient,
-        private apiSuccessHandler: ApiSuccessHandlerService,
-        private apiErrorHandler: ApiErrorHandlerService
+        private apiHandlerService: ApiHandlerService
     ) {}
 
     /**
@@ -67,13 +65,20 @@ export class ApplicationStore {
      */
     getApplications(): Observable<Application[]> {
         const url = 'http://localhost:9025/api/applications';
-        return this.http.get<ApplicationApiResource[]>(url).pipe(
-            map((response) => {
-                const applications = response.map(apiApp => new ApplicationMapper().toApp(apiApp));
+        return this.http.get<ApplicationApiResource[]>(url, { observe: 'response' as const }).pipe(
+            tap((response: HttpResponse<ApplicationApiResource[]>) => {
+                this.apiHandlerService.showSuccess('Applications loaded successfully.');
+            }),
+            map((response: HttpResponse<ApplicationApiResource[]>) => {
+                if (!response.body) throw new Error('Response body is empty');
+                const applications = response.body.map(apiApp => new ApplicationMapper().toApp(apiApp));
                 this.setIndex(applications);
                 return applications;
             }),
-            catchError((error: HttpErrorResponse) => throwError(() => error))
+            catchError((error: HttpErrorResponse) => {
+                this.apiHandlerService.showError(error);
+                return EMPTY;
+            })
         );
     }
 
@@ -85,13 +90,20 @@ export class ApplicationStore {
      */
     getApplication(id: number): Observable<Application> {
         const url = `http://localhost:9025/api/applications/${id}`;
-        return this.http.get<ApplicationApiResource>(url).pipe(
-            map((response) => {
-                const application = new ApplicationMapper().toApp(response);
+        return this.http.get<ApplicationApiResource>(url, { observe: 'response' as const }).pipe(
+            tap((response: HttpResponse<ApplicationApiResource>) => {
+                this.apiHandlerService.showSuccess(`Application ${response.body?.name} loaded successfully.`);
+            }),
+            map((response: HttpResponse<ApplicationApiResource>) => {
+                if (!response.body) throw new Error('Response body is empty');
+                const application = new ApplicationMapper().toApp(response.body);
                 this.setShow(application);
                 return application;
             }),
-            catchError((error: HttpErrorResponse) => throwError(() => error))
+            catchError((error: HttpErrorResponse) => {
+                this.apiHandlerService.showError(error);
+                return EMPTY;
+            })
         );
     }
 
@@ -109,14 +121,14 @@ export class ApplicationStore {
 
         return this.http.post<ApplicationApiResource>(url, payload, { observe: 'response' as const }).pipe(
             tap((response: HttpResponse<ApplicationApiResource>) => {
-                this.apiSuccessHandler.handle(response, `Application ${response.body?.name} created successfully.`);
+                this.apiHandlerService.showSuccess(`Application ${response.body?.name} created successfully.`);
             }),
             map((response: HttpResponse<ApplicationApiResource>) => {
                 if (!response.body) throw new Error('Response body is empty');
                 return new ApplicationMapper().toApp(response.body);
             }),
             catchError((error: HttpErrorResponse) => {
-                this.apiErrorHandler.handle(error);
+                this.apiHandlerService.showError(error);
                 if (error.status === 422) return throwError(() => error);
                 return EMPTY;
             })
@@ -139,7 +151,7 @@ export class ApplicationStore {
         return this.http.put<ApplicationApiResource>(url, payload, { observe: 'response' as const }).pipe(
             tap((response: HttpResponse<ApplicationApiResource>) => {
                 if (response.body) {
-                    this.apiSuccessHandler.handle(response, `Application ${response.body.name} updated successfully.`);
+                    this.apiHandlerService.showSuccess(`Application ${response.body.name} updated successfully.`);
                     this.setShow(new ApplicationMapper().toApp(response.body));
                 }
             }),
@@ -148,7 +160,7 @@ export class ApplicationStore {
                 return new ApplicationMapper().toApp(response.body);
             }),
             catchError((error: HttpErrorResponse) => {
-                this.apiErrorHandler.handle(error);
+                this.apiHandlerService.showError(error);
                 if (error.status === 422) return throwError(() => error);
                 return EMPTY;
             })
@@ -164,12 +176,12 @@ export class ApplicationStore {
     deleteApplication(application: Application): Observable<null> {
         const url = `http://localhost:9025/api/applications/${application.id}`;
         return this.http.delete<null>(url, { observe: 'response' as const }).pipe(
-            tap((response) => {
-                this.apiSuccessHandler.handle(response, `Application ${application.name} deleted successfully.`);
+            tap(() => {
+                this.apiHandlerService.showSuccess(`Application ${application.name} deleted successfully.`);
             }),
             map(() => null),
             catchError((error: HttpErrorResponse) => {
-                this.apiErrorHandler.handle(error);
+                this.apiHandlerService.showError(error);
                 return EMPTY;
             })
         );

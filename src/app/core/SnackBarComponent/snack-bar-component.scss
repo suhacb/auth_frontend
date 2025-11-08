@@ -1,0 +1,31 @@
+/* snackbar.component.scss */
+
+.snackbar-content {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  padding: 0 16px;
+  border-radius: 4px;
+  min-width: 300px;
+}
+
+/* background color varies by type */
+.snackbar-success {
+  background-color: #4caf50; /* green for success */
+}
+
+.snackbar-error {
+  background-color: #f44336; /* red for error */
+}
+
+.snackbar-icon {
+  margin-right: 8px;
+}
+
+.snackbar-message {
+  flex: 1; /* take all available space */
+}
+
+.dismiss-button {
+  color: #fff;
+}

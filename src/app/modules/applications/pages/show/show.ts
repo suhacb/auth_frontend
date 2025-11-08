@@ -92,6 +92,7 @@ export class ApplicationsShow {
         error: (error) => {
           this.backendErrors = error.error.errors || {};
           this.applicationForm.backendErrors = this.backendErrors;
+          confirmCancelDialogRef.close();
         }
       });
     });

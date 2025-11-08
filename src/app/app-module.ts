@@ -42,6 +42,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ApplicationIndex } from './modules/applications/pages/index/application-index/application-index';
 import { ApplicationCreateModal } from './modules/applications/components/application-create-modal/application-create-modal';
 import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-dialog';
+import { SnackBarComponent } from './core/SnackBarComponent/snack-bar-component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-d
     ApplicationIndex,
     ApplicationCreateModal,
     ConfirmCancelDialog,
+    SnackBarComponent,
   ],
   imports: [
     BrowserModule,
