@@ -5,8 +5,8 @@
             [data]="application()"
             [mode] = "mode()"
             [backendErrors]="backendErrors"
-            (storeOrUpdate)="handleUpdateApplication($event)"
-            (cancel)="handleEditApplicationCancel()"
+            (storeOrUpdate)="handleApplicationUpdate($event)"
+            (cancel)="handleCancelApplicationEdit()"
             (modeChange)="onModeChange($event)"
         ></app-application-form>
     </ng-container>

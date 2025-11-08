@@ -1,13 +1,12 @@
-import { Component, Signal, signal, ViewChild } from '@angular/core';
+import { Component, signal, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationStore } from '../store/applications.store';
 import { ApplicationForm } from '../components/application-form/application-form';
 import { Application } from '../contracts/Application';
 import { ApplicationMapper } from '../models/ApplicationMapper';
-import { FormErrorMapper } from '../../../core/ErrorMapper/ErrorMapper';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationUpdateConfirmModal } from './application-update-confirm-modal/application-update-confirm-modal';
+import { MatDialog } from '@angular/material/dialog';
 import { ApplicationUpdateCancelModal } from './application-update-cancel-modal/application-update-cancel-modal';
+import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
   selector: 'app-show',
@@ -26,33 +25,50 @@ export class Show {
   
   @ViewChild('applicationForm') applicationForm!: ApplicationForm;
 
-  handleUpdateApplication(updatedApplication: Application): void {
-    this.backendErrors = {};
-    this.applicationForm.backendErrors = this.backendErrors;
-    // Show confirm update dialog
-    const dialogRef = this.dialog.open(ApplicationUpdateConfirmModal, {
+  handleApplicationUpdate(updatedApplication: Application): void {
+    const confirmCancelDialogRef = this.dialog.open(ConfirmCancelDialog, {
       width: '600px',
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if(result) {
-        const updatedApplication = this.applicationForm.getValue();
-        this.store.updateApplication(this.application(), updatedApplication).subscribe({
-          next: () => {
-            this.mode.set('show');
-            this.application.set(this.store.show());
-          },
-          error: (error) => {
-            this.backendErrors = error.error.errors || {};
-            this.applicationForm.backendErrors = this.backendErrors;
-          }
-        });
+      disableClose: true,
+      data: {
+        title: 'Update Application',
+        content: 'Do you really want to update the application?'
       }
     });
+
+    const modalInstance = confirmCancelDialogRef.componentInstance;
+    modalInstance.confirm.subscribe(() => {
+      this.backendErrors = {};
+      this.applicationForm.backendErrors = this.backendErrors;      
+      const updatedApplication = this.applicationForm.getValue();
+      this.store.updateApplication(this.application(), updatedApplication).subscribe({
+        next: () => {
+          this.mode.set('show');
+          this.application.set(this.store.show());
+          confirmCancelDialogRef.close();
+        },
+        error: (error) => {
+          this.backendErrors = error.error.errors || {};
+          this.applicationForm.backendErrors = this.backendErrors;
+        }
+      });
+    });
+    
+    modalInstance.cancel.subscribe(() => {
+      confirmCancelDialogRef.close();
+    });
+
+    // Show confirm update dialog
+    // const dialogRef = this.dialog.open(ApplicationUpdateConfirmModal, {
+    //   width: '600px',
+    //   disableClose: true
+    // });
+// 
+    // dialogRef.afterClosed().subscribe((result: boolean) => {
+    //   if(result) {
+    // });
   }
 
-  handleEditApplicationCancel(): void {
+  handleCancelApplicationEdit(): void {
     const dialogRef = this.dialog.open(ApplicationUpdateCancelModal, {
       width: '600px',
       disableClose: true
