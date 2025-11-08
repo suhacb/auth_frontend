@@ -13,45 +13,28 @@ import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-c
   templateUrl: './index.html',
   styleUrl: './index.scss',
 })
-
 export class Index {
+  /** Backend validation errors from the API */
   public backendErrors: Record<string, string[]> | null = null;
-  constructor(public store: ApplicationStore, private router: Router, private dialog: MatDialog) {}
 
+  constructor(
+    public store: ApplicationStore, 
+    private router: Router, 
+    private dialog: MatDialog
+  ) {}
+
+  /**
+   * Navigate to the detail page of the given application.
+   * @param application The application to view.
+   */
   show(application: Application): void {
     this.router.navigate(['/applications', application.id]);
   }
 
-  openApplicationDeleteModal(application: Application): void {
-    const dialogRef = this.dialog.open(ConfirmCancelDialog, {
-      width: '600px',
-      disableClose: true,
-      data: {
-        title: 'Delete Application',
-        content: `Do you really want to delete the application ${application.name}?`
-      }
-    });
-
-    // Subscribe to events (confirm and cancel)
-    const modalInstance = dialogRef.componentInstance;
-    modalInstance.confirm.subscribe(() => {
-      this.handleApplicationDelete(application, dialogRef);
-    })
-
-    modalInstance.cancel.subscribe(() => {
-      dialogRef.close();
-    });
-  }
-
-  handleApplicationDelete(application: Application, dialogRef: MatDialogRef<ConfirmCancelDialog>) {
-    this.store.deleteApplication(application).subscribe({
-      next: () => {
-        this.store.getIndex().subscribe();
-        dialogRef.close();
-      }
-    });
-  }
-
+  /**
+   * Opens the modal dialog for creating a new application.
+   * Subscribes to the create and cancel events emitted by the dialog.
+   */
   openApplicationCreateModal(): void {
     const dialogRef = this.dialog.open(ApplicationCreateModal, {
       width: '1024px',
@@ -69,7 +52,17 @@ export class Index {
     });
   }
 
-  handleApplicationStore(newApplication: Application, dialogRef: MatDialogRef<ApplicationCreateModal>): void {
+  /**
+   * Handles storing a new application after the user confirms creation.
+   * Opens a confirmation dialog, stores the application via the store, 
+   * refreshes the index, and handles backend validation errors if any.
+   * @param newApplication The application object to store.
+   * @param dialogRef Reference to the create application modal.
+   */
+  handleApplicationStore(
+    newApplication: Application, 
+    dialogRef: MatDialogRef<ApplicationCreateModal>
+  ): void {
     const confirmCancelDialogRef = this.dialog.open(ConfirmCancelDialog, {
       width: '600px',
       disableClose: true,
@@ -81,7 +74,7 @@ export class Index {
 
     const modalInstance = confirmCancelDialogRef.componentInstance;
     modalInstance.confirm.subscribe(() => {
-       this.store.storeApplication(newApplication).subscribe({
+      this.store.storeApplication(newApplication).subscribe({
         next: (() => {
           this.store.getIndex().subscribe();
           confirmCancelDialogRef.close();
@@ -106,6 +99,11 @@ export class Index {
     });
   }
 
+  /**
+   * Handles the cancellation of creating a new application.
+   * Opens a confirmation dialog asking the user if they want to discard changes.
+   * @param dialogRef Reference to the create application modal.
+   */
   handleCancelApplicationCreate(dialogRef: MatDialogRef<ApplicationCreateModal>) {
     const confirmCancelDialogRef = this.dialog.open(ConfirmCancelDialog, {
       width: '600px',
@@ -127,4 +125,45 @@ export class Index {
       confirmCancelDialogRef.close();
     });
   }
+
+  /**
+   * Opens a confirmation dialog to delete the specified application.
+   * @param application The application to delete.
+   */
+  openApplicationDeleteModal(application: Application): void {
+    const dialogRef = this.dialog.open(ConfirmCancelDialog, {
+      width: '600px',
+      disableClose: true,
+      data: {
+        title: 'Delete Application',
+        content: `Do you really want to delete the application ${application.name}?`
+      }
+    });
+
+    // Subscribe to events (confirm and cancel)
+    const modalInstance = dialogRef.componentInstance;
+    modalInstance.confirm.subscribe(() => {
+      this.handleApplicationDelete(application, dialogRef);
+    })
+
+    modalInstance.cancel.subscribe(() => {
+      dialogRef.close();
+    });
+  }
+
+  /**
+   * Deletes the specified application using the store and refreshes the index.
+   * Closes the confirmation dialog after deletion.
+   * @param application The application to delete.
+   * @param dialogRef Reference to the delete confirmation dialog.
+   */
+  handleApplicationDelete(application: Application, dialogRef: MatDialogRef<ConfirmCancelDialog>) {
+    this.store.deleteApplication(application).subscribe({
+      next: () => {
+        this.store.getIndex().subscribe();
+        dialogRef.close();
+      }
+    });
+  }
 }
+
