@@ -1,15 +1,14 @@
 // import { Component, OnInit } from '@angular/core';
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApplicationStore } from '../store/applications.store';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDeleteModal } from './application-delete-modal/application-delete-modal';
 import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
 import { Application } from '../contracts/Application';
-import { switchMap } from 'rxjs';
-import { FormErrorMapper } from '../../../core/ErrorMapper/ErrorMapper';
 import { DialogService } from '../../../core/DialogService/DialogService';
 import { ApplicationMapper } from '../models/ApplicationMapper';
+import { ApplicationCreateCancelModal } from './application-create-cancel-modal/application-create-cancel-modal';
 
 @Component({
   selector: 'app-index',
@@ -75,7 +74,16 @@ export class Index {
   }
 
   handleCancelCreateApplication(dialogRef: MatDialogRef<ApplicationCreateModal>) {
-    console.log('Show dialog to confirm cancel of create application.');
+    const confirmDialogRef = this.dialog.open(ApplicationCreateCancelModal, {
+      width: '600px',
+      disableClose: true
+    });
+
+    confirmDialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        dialogRef.close();
+      }
+    });
   }
 
   // openApplicationCreateModal() {

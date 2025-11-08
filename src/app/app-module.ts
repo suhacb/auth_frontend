@@ -42,6 +42,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ApplicationIndex } from './components/applications/index/application-index/application-index';
 import { ApplicationDeleteModal } from './components/applications/index/application-delete-modal/application-delete-modal';
 import { ApplicationCreateModal } from './components/applications/components/application-create-modal/application-create-modal';
+import { ApplicationCreateCancelModal } from './components/applications/index/application-create-cancel-modal/application-create-cancel-modal';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { ApplicationCreateModal } from './components/applications/components/app
     ApplicationForm,
     ApplicationIndex,
     ApplicationDeleteModal,
-    ApplicationCreateModal
+    ApplicationCreateModal,
+    ApplicationCreateCancelModal
   ],
   imports: [
     BrowserModule,
