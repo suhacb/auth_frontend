@@ -41,7 +41,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ApplicationIndex } from './modules/applications/index/application-index/application-index';
 import { ApplicationCreateModal } from './modules/applications/components/application-create-modal/application-create-modal';
-import { ApplicationUpdateCancelModal } from './modules/applications/show/application-update-cancel-modal/application-update-cancel-modal';
 import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @NgModule({
@@ -62,7 +61,6 @@ import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-d
     ApplicationForm,
     ApplicationIndex,
     ApplicationCreateModal,
-    ApplicationUpdateCancelModal,
     ConfirmCancelDialog,
   ],
   imports: [

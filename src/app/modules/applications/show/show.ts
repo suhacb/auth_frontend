@@ -5,7 +5,6 @@ import { ApplicationForm } from '../components/application-form/application-form
 import { Application } from '../contracts/Application';
 import { ApplicationMapper } from '../models/ApplicationMapper';
 import { MatDialog } from '@angular/material/dialog';
-import { ApplicationUpdateCancelModal } from './application-update-cancel-modal/application-update-cancel-modal';
 import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
@@ -56,39 +55,28 @@ export class Show {
     modalInstance.cancel.subscribe(() => {
       confirmCancelDialogRef.close();
     });
-
-    // Show confirm update dialog
-    // const dialogRef = this.dialog.open(ApplicationUpdateConfirmModal, {
-    //   width: '600px',
-    //   disableClose: true
-    // });
-// 
-    // dialogRef.afterClosed().subscribe((result: boolean) => {
-    //   if(result) {
-    // });
   }
 
   handleCancelApplicationEdit(): void {
-    const dialogRef = this.dialog.open(ApplicationUpdateCancelModal, {
+    const confirmCancelDialogRef = this.dialog.open(ConfirmCancelDialog, {
       width: '600px',
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
-        this.applicationForm.resetToOriginal();
-        this.backendErrors = {};
-        this.applicationForm.backendErrors = this.backendErrors;
-        this.mode.set('show');
+      disableClose: true,
+      data: {
+        title: 'Cancel Update Application',
+        content: 'Do you really want to cancel updating the application?'
       }
     });
-  }
 
-  onCancel() {
-    console.log('Cancel clicked');
-  }
-
-  onModeChange(mode: 'show' | 'edit' | 'create') {
-    this.mode.set(mode);
+    const modalInstance = confirmCancelDialogRef.componentInstance;
+    modalInstance.confirm.subscribe(() => {
+      this.applicationForm.resetToOriginal();
+      this.backendErrors = {};
+      this.applicationForm.backendErrors = this.backendErrors;
+      this.mode.set('show');
+      confirmCancelDialogRef.close();
+    });
+    modalInstance.cancel.subscribe(() => {
+      confirmCancelDialogRef.close();
+    });
   }
 }
