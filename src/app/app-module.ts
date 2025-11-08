@@ -45,6 +45,7 @@ import { ApplicationCreateModal } from './modules/applications/components/applic
 import { ApplicationCreateCancelModal } from './modules/applications/index/application-create-cancel-modal/application-create-cancel-modal';
 import { ApplicationUpdateConfirmModal } from './modules/applications/show/application-update-confirm-modal/application-update-confirm-modal';
 import { ApplicationUpdateCancelModal } from './modules/applications/show/application-update-cancel-modal/application-update-cancel-modal';
+import { ConfirmCancelDialog } from './core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { ApplicationUpdateCancelModal } from './modules/applications/show/applic
     ApplicationCreateModal,
     ApplicationCreateCancelModal,
     ApplicationUpdateConfirmModal,
-    ApplicationUpdateCancelModal
+    ApplicationUpdateCancelModal,
+    ConfirmCancelDialog,
   ],
   imports: [
     BrowserModule,

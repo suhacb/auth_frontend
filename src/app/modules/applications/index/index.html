@@ -15,7 +15,7 @@
         <app-application-index
             [applications]="store.index()"
             (onShowEvent)="show($event)"
-            (onDeleteEvent)="handleApplicationDelete($event)">
+            (onDeleteEvent)="openApplicationDeleteModal($event)">
         </app-application-index>
     </ng-container>
 }

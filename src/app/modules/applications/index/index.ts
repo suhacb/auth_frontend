@@ -7,8 +7,8 @@ import { ApplicationDeleteModal } from './application-delete-modal/application-d
 import { ApplicationCreateModal } from '../components/application-create-modal/application-create-modal';
 import { Application } from '../contracts/Application';
 import { DialogService } from '../../../core/DialogService/DialogService';
-import { ApplicationMapper } from '../models/ApplicationMapper';
 import { ApplicationCreateCancelModal } from './application-create-cancel-modal/application-create-cancel-modal';
+import { ConfirmCancelDialog } from '../../../core/ConfirmCancelDialog/confirm-cancel-dialog';
 
 @Component({
   selector: 'app-index',
@@ -25,13 +25,33 @@ export class Index {
     this.router.navigate(['/applications', application.id]);
   }
 
-  handleApplicationDelete(application: Application): void {
-    this.dialogService.openFormDialog({
-      component: ApplicationDeleteModal,
-      data: {application},
-      submit: (application: Application) => this.store.deleteApplication(application, {observe: 'response'}),
-      reload: () => this.store.getIndex(),
-      successMessage: `Application ${application.name} deleted.`
+  openApplicationDeleteModal(application: Application): void {
+    const dialogRef = this.dialog.open(ConfirmCancelDialog, {
+      width: '600px',
+      disableClose: true,
+      data: {
+        title: 'Delete Application',
+        content: `Do you really want to delete the application ${application.name}?`
+      }
+    });
+
+    // Subscribe to events (save and cancel)
+    const modalInstance = dialogRef.componentInstance;
+    modalInstance.confirm.subscribe(() => {
+      this.handleApplicationDelete(application, dialogRef);
+    })
+
+    modalInstance.cancel.subscribe(() => {
+      dialogRef.close();
+    });
+  }
+
+  handleApplicationDelete(application: Application, dialogRef: MatDialogRef<ConfirmCancelDialog>) {
+    this.store.deleteApplication(application).subscribe({
+      next: () => {
+        this.store.getIndex().subscribe();
+        dialogRef.close();
+      }
     });
   }
 
@@ -44,15 +64,15 @@ export class Index {
     // Subscribe to events (save and cancel)
     const modalInstance = dialogRef.componentInstance;
     modalInstance.storeApplication.subscribe((newApplication: Application) => {
-      this.handleStoreApplication(newApplication, dialogRef);
+      this.handleApplicationStore(newApplication, dialogRef);
     });
 
     modalInstance.cancelCreateApplication.subscribe(() => {
-      this.handleCancelCreateApplication(dialogRef);
+      this.handleCancelApplicationCreate(dialogRef);
     });
   }
 
-  handleStoreApplication(newApplication: Application, dialogRef: MatDialogRef<ApplicationCreateModal>): void {
+  handleApplicationStore(newApplication: Application, dialogRef: MatDialogRef<ApplicationCreateModal>): void {
     this.store.storeApplication(newApplication).subscribe({
       next: (() => {
         this.store.getIndex().subscribe();
@@ -72,7 +92,7 @@ export class Index {
     });
   }
 
-  handleCancelCreateApplication(dialogRef: MatDialogRef<ApplicationCreateModal>) {
+  handleCancelApplicationCreate(dialogRef: MatDialogRef<ApplicationCreateModal>) {
     const confirmDialogRef = this.dialog.open(ApplicationCreateCancelModal, {
       width: '600px',
       disableClose: true

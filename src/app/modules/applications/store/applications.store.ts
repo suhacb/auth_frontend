@@ -90,10 +90,18 @@ export class ApplicationStore {
         );
     }
 
-    deleteApplication(application: Application, options = {observe: 'response'}): Observable<HttpResponse<any>>
+    deleteApplication(application: Application): Observable<HttpResponse<any>>
     {
         const url = `http://localhost:9025/api/applications/${application.id}`;
-        return this.http.delete<HttpResponse<any>>(url);
+        return this.http.delete<null>(url, {observe: 'response'}).pipe(
+            tap((response) => {
+                this.apiSuccessHandler.handle(response, `Application ${application.name} deleted successfully.`);
+            }),
+            catchError((error: HttpErrorResponse) => {
+                const handled = this.apiErrorHandler.handle(error);
+                return EMPTY;
+            })
+        );
     }
 
     storeApplication(application: Application): Observable<HttpResponse<any>> {
