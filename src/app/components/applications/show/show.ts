@@ -27,6 +27,8 @@ export class Show {
   @ViewChild('applicationForm') applicationForm!: ApplicationForm;
 
   handleUpdateApplication(updatedApplication: Application): void {
+    this.backendErrors = {};
+    this.applicationForm.backendErrors = this.backendErrors;
     // Show confirm update dialog
     const dialogRef = this.dialog.open(ApplicationUpdateConfirmModal, {
       width: '600px',
@@ -59,6 +61,8 @@ export class Show {
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.applicationForm.resetToOriginal();
+        this.backendErrors = {};
+        this.applicationForm.backendErrors = this.backendErrors;
         this.mode.set('show');
       }
     });
