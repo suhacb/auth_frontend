@@ -35,27 +35,28 @@ export class ApplicationStore {
         this._show.set(application);
     }
 
-    getIndex(): Observable<Application[]> {
-    const url = 'http://localhost:9025/api/applications';
+    getApplications(): Observable<Application[]> {
+        const url = 'http://localhost:9025/api/applications';
 
-    return this.http.get<ApplicationApiResource[]>(url).pipe(
-        map((res: ApplicationApiResource[]) => {
-            const applications: Application[] = res.map(
-                (apiApp: ApplicationApiResource) => new ApplicationMapper().toApp(apiApp)
-            );
-            this.setIndex(applications);
-            return applications;
-        }),
-            catchError((error: HttpErrorResponse) => {
-            return throwError(() => error);
-        }));
+        return this.http.get<ApplicationApiResource[]>(url).pipe(
+            map((response: ApplicationApiResource[]) => {
+                const applications: Application[] = response.map(
+                    (apiApp: ApplicationApiResource) => new ApplicationMapper().toApp(apiApp)
+                );
+                this.setIndex(applications);
+                return applications;
+            }),
+                catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
     }
 
     getApplication(id: number): Observable<Application> {
         const url = `http://localhost:9025/api/applications/${id}`;
         return this.http.get<ApplicationApiResource>(url).pipe(
-            map((res: ApplicationApiResource) => {
-                const application = new ApplicationMapper().toApp(res);
+            map((response: ApplicationApiResource) => {
+                const application = new ApplicationMapper().toApp(response);
                 this.setShow(application);
                 return application;
             }),
@@ -65,7 +66,33 @@ export class ApplicationStore {
         );
     }
 
-    updateApplication(application: Application, updatedApplication: Application): Observable<HttpResponse<any>> {
+    storeApplication(application: Application): Observable<Application> {
+        const url = 'http://localhost:9025/api/applications';
+        const payload = new ApplicationMapper().toApi(application);
+        return this.http.post<ApplicationApiResource>(url, payload, {observe: 'response'}).pipe(
+            tap((response: HttpResponse<ApplicationApiResource>) => {
+                this.apiSuccessHandler.handle(response, `Application ${response.body?.name} created successfully.`);
+            }),
+            map((response: HttpResponse<ApplicationApiResource>) => {
+                if (!response.body) {
+                    throw new Error('Response body is empty');
+                }
+                return new ApplicationMapper().toApp(response.body);
+            }),
+            catchError((error: HttpErrorResponse) => {
+                const handled = this.apiErrorHandler.handle(error);
+
+                // Re-throw all errors to let the Page handle 422 or others if needed
+                if (error.status === 422) {
+                    return throwError(() => error);
+                }
+
+                return EMPTY;
+            })
+        );
+    }
+
+    updateApplication(application: Application, updatedApplication: Application): Observable<Application> {
         const url = `http://localhost:9025/api/applications/${application.id}`;
         const payload = new ApplicationMapper().toApi(updatedApplication);
 
@@ -77,6 +104,12 @@ export class ApplicationStore {
                     this.setShow(application);
                 }
             }),
+            map((response: HttpResponse<ApplicationApiResource>) => {
+                if (!response.body) {
+                    throw new Error('Response body is empty');
+                }
+                return new ApplicationMapper().toApp(response.body);
+            }),
             catchError((error: HttpErrorResponse) => {
                 const handled = this.apiErrorHandler.handle(error);
 
@@ -90,35 +123,16 @@ export class ApplicationStore {
         );
     }
 
-    deleteApplication(application: Application): Observable<HttpResponse<any>>
+    deleteApplication(application: Application): Observable<null>
     {
         const url = `http://localhost:9025/api/applications/${application.id}`;
         return this.http.delete<null>(url, {observe: 'response'}).pipe(
             tap((response) => {
                 this.apiSuccessHandler.handle(response, `Application ${application.name} deleted successfully.`);
             }),
+            map(() => null),
             catchError((error: HttpErrorResponse) => {
                 const handled = this.apiErrorHandler.handle(error);
-                return EMPTY;
-            })
-        );
-    }
-
-    storeApplication(application: Application): Observable<HttpResponse<any>> {
-        const url = 'http://localhost:9025/api/applications';
-        const payload = new ApplicationMapper().toApi(application);
-        return this.http.post<ApplicationApiResource>(url, payload, {observe: 'response'}).pipe(
-            tap((response: HttpResponse<ApplicationApiResource>) => {
-                this.apiSuccessHandler.handle(response, `Application ${response.body?.name} created successfully.`);
-            }),
-            catchError((error: HttpErrorResponse) => {
-                const handled = this.apiErrorHandler.handle(error);
-
-                // Re-throw all errors to let the Page handle 422 or others if needed
-                if (error.status === 422) {
-                    return throwError(() => error);
-                }
-
                 return EMPTY;
             })
         );

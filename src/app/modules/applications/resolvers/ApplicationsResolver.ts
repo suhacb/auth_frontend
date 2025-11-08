@@ -12,7 +12,7 @@ export class ApplicationsResolver {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Application[]> {
         this.store.setIndex([]);
         this.store.setShow(new ApplicationMapper().make());
-        return this.store.getIndex().pipe(
+        return this.store.getApplications().pipe(
             tap(applications => this.store.setIndex(applications))
         );
     }

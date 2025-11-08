@@ -76,7 +76,7 @@ export class Index {
     modalInstance.confirm.subscribe(() => {
       this.store.storeApplication(newApplication).subscribe({
         next: (() => {
-          this.store.getIndex().subscribe();
+          this.store.getApplications().subscribe();
           confirmCancelDialogRef.close();
           dialogRef.close();
         }),
@@ -160,7 +160,7 @@ export class Index {
   handleApplicationDelete(application: Application, dialogRef: MatDialogRef<ConfirmCancelDialog>) {
     this.store.deleteApplication(application).subscribe({
       next: () => {
-        this.store.getIndex().subscribe();
+        this.store.getApplications().subscribe();
         dialogRef.close();
       }
     });
