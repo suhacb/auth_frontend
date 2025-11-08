@@ -47,17 +47,15 @@ export abstract class BaseFormComponent<T> implements OnInit{
     }
 
     onCancel(): void {
-        if (this.mode === 'edit') {
-            const original = this.originalData();
-            if (original) {
-                this.patchForm(original);
-            }
-            this.readonly.set(true);
-            this.mode = 'show';
-            this.modeChange.emit(this.mode);
-        } else if (this.mode === 'create') {
-            this.cancel.emit();
+        this.cancel.emit();
+    }
+
+    resetToOriginal(): void {
+        const original = this.originalData();
+        if (original) {
+            this.patchForm(original);
         }
+        this.readonly.set(true);
     }
 
     onStoreOrUpdate(): void {

@@ -43,6 +43,8 @@ import { ApplicationIndex } from './components/applications/index/application-in
 import { ApplicationDeleteModal } from './components/applications/index/application-delete-modal/application-delete-modal';
 import { ApplicationCreateModal } from './components/applications/components/application-create-modal/application-create-modal';
 import { ApplicationCreateCancelModal } from './components/applications/index/application-create-cancel-modal/application-create-cancel-modal';
+import { ApplicationUpdateConfirmModal } from './components/applications/show/application-update-confirm-modal/application-update-confirm-modal';
+import { ApplicationUpdateCancelModal } from './components/applications/show/application-update-cancel-modal/application-update-cancel-modal';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import { ApplicationCreateCancelModal } from './components/applications/index/ap
     ApplicationIndex,
     ApplicationDeleteModal,
     ApplicationCreateModal,
-    ApplicationCreateCancelModal
+    ApplicationCreateCancelModal,
+    ApplicationUpdateConfirmModal,
+    ApplicationUpdateCancelModal
   ],
   imports: [
     BrowserModule,

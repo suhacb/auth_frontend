@@ -54,7 +54,7 @@ export class Index {
 
   handleStoreApplication(newApplication: Application, dialogRef: MatDialogRef<ApplicationCreateModal>): void {
     this.store.storeApplication(newApplication).subscribe({
-      next: (response => {
+      next: (() => {
         this.store.getIndex().subscribe();
         dialogRef.close();
       }),

@@ -1,15 +1,14 @@
 @if(store.show().id > 0) {
     <ng-container>
-        <!-- <app-application-form
+        <app-application-form
             #applicationForm
-            [data]="application"
+            [data]="application()"
             [mode] = "mode()"
-            [backendErrors]="backendErrors()"
-            (save)="onUpdate($event)"
-            (cancel)="onCancel()"
+            [backendErrors]="backendErrors"
+            (storeOrUpdate)="handleUpdateApplication($event)"
+            (cancel)="handleEditApplicationCancel()"
             (modeChange)="onModeChange($event)"
         ></app-application-form>
-    -->
     </ng-container>
 }
 
