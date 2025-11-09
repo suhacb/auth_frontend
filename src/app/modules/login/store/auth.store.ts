@@ -1,0 +1,181 @@
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { Token } from '../token';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { catchError, EMPTY, firstValueFrom, map, Observable, of, tap, throwError } from 'rxjs';
+import { decodeJwt } from '../../../core/jwt/decodeJwt';
+import { ApiHandlerService } from '../../../core/http/api-handler-service';
+import { AccessToken, AccessTokenApiResource } from '../contracts/AccessToken';
+import { AccessTokenMapper } from '../models/AccessTokenMapper';
+
+@Injectable({ providedIn: 'root' })
+
+export class AuthStore {
+    constructor(
+        private http: HttpClient,
+        private apiHandlerService: ApiHandlerService
+    ) {}
+
+    private _accessToken = signal<string | null>(null);
+    private _tokenType = signal<string | null>(null);
+    private _expiresIn = signal<number | null>(null);
+    private _refreshToken = signal<string | null>(null);
+    private _refreshExpiresIn = signal<number | null>(null);
+    private _scope = signal<string | null>(null);
+    private _idToken = signal<string | null>(null);
+    private _notBeforePolicy = signal<string | null>(null);
+    private _sessionState = signal<string | null>(null);
+
+    // expose readonly signals
+    readonly accessToken = this._accessToken.asReadonly();
+    readonly tokenType = this._tokenType.asReadonly();
+    readonly expiresIn = this._expiresIn.asReadonly();
+    readonly refreshToken = this._refreshToken.asReadonly();
+    readonly refreshExpiresIn = this._refreshExpiresIn.asReadonly();
+    readonly scope = this._scope.asReadonly();
+    readonly idToken = this._idToken.asReadonly();
+    readonly notBeforePolicy = this._notBeforePolicy.asReadonly();
+    readonly sessionState = this._sessionState.asReadonly();
+
+    // derived/computed signals
+    readonly isLoggedIn = computed(() => !!this._accessToken());
+
+    // user information from access_token
+    readonly user = computed(() => {
+        const token = this._accessToken();
+        if (!token) return null;
+        try {
+            const payload: any = decodeJwt(token);
+            return {
+                username: payload.preferred_username,
+                name: payload.given_name,
+                familyName: payload.family_name,
+                email: payload.email
+            }
+        } catch {
+            return null;
+        }
+    });
+
+    // setters
+    setToken(token: AccessToken | null = null) {
+        this.setAccessToken(token ? token.accessToken : null);
+        this.setTokenType(token ? token.tokenType : null);
+        this.setExpiresIn(token ? token.expiresIn : null);
+        this.setRefreshToken(token ? token.refreshToken : null);
+        this.setRefreshExpiresIn(token ? token.refreshExpiresIn : null);
+        this.setScope(token ? token.scope : null);
+        this.setIdToken(token ? token.idToken : null);
+        this.setNotBeforePolicy(token ? token.notBeforePolicy : null);
+        this.setSessionState(token ? token.sessionState : null);
+    }
+
+    setAccessToken(token: string | null = null) {
+        this.setLocalStorage('access_token', token);
+        this._accessToken.set(token);
+    }
+
+    setTokenType(tokenType: string | null) {
+        this.setLocalStorage('token_type', tokenType);
+        this._tokenType.set(tokenType)
+    }
+
+    setExpiresIn(expiresIn: number | null) {
+        this.setLocalStorage('expires_in', expiresIn);
+        this._expiresIn.set(expiresIn)
+    }
+
+    setRefreshToken(refreshToken: string | null) {
+        this.setLocalStorage('refresh_token', refreshToken);
+        this._refreshToken.set(refreshToken);
+    }
+
+    setRefreshExpiresIn(refreshExpiresIn: number | null) {
+        this.setLocalStorage('refresh_expires_in', refreshExpiresIn);
+        this._refreshExpiresIn.set(refreshExpiresIn);
+    }
+
+    setScope(scope: string | null) {
+        this.setLocalStorage('scope', scope);
+        this._scope.set(scope);
+    }
+
+    setIdToken(idToken: string | null) {
+        this.setLocalStorage('id_token', idToken);
+        this._idToken.set(idToken);
+    }
+
+    setNotBeforePolicy(notBeforePolicy: string | null) {
+        this.setLocalStorage('not_before_policy', notBeforePolicy);
+        this._notBeforePolicy.set(notBeforePolicy);
+    }
+
+    setSessionState(sessionState: string | null) {
+        this.setLocalStorage('session_state', sessionState);
+        this._sessionState.set(sessionState);
+    }
+
+    resetToken() {
+        this.setToken();
+    }
+
+    login (username: string, password: string): Observable<AccessToken> {
+        const url = 'http://localhost:9025/api/auth/login';
+        const body = {username, password};
+        return this.http.post<AccessTokenApiResource>(url, body, { observe: 'response' as const}).pipe(
+            tap(response => {
+                this.apiHandlerService.showSuccess('Login successful.');
+            }),
+            map((response) => {
+                if (!response.body) throw new Error('Response body is empty');
+                const accessToken = new AccessTokenMapper().toApp(response.body);
+                this.setToken(accessToken);
+                return accessToken;
+            }),
+            catchError((error: HttpErrorResponse) => {
+                this.apiHandlerService.showError(error);
+                if (error.status === 401 || error.status === 422) return throwError(() => error);
+                return EMPTY;
+            })
+        );
+    }
+
+    validateAccessToken(): Observable<boolean> {
+        const url = 'http://localhost:9025/api/auth/validate-access-token';
+        return this.http.get<AccessTokenApiResource | boolean>(url, { observe: 'response' as const}).pipe(
+            map((response) => {
+                if (!response.body) throw new Error('Response body is empty');
+                if (response.body === true) return true;
+                if ('access_token' in response.body) {
+                    const accessToken = new AccessTokenMapper().toApp(response.body);
+                    this.setToken(accessToken);
+                    return true;
+                }
+                return false;
+            }),
+            catchError((error) => {
+                this.resetToken();
+                return of(false);
+            })
+        );
+    }
+
+    logout(): Observable<boolean> {
+        const url = 'http://localhost:9025/api/auth/logout';
+        return this.http.post<boolean>(url, [], { observe: 'response' as const}).pipe(
+            map(() => {
+                this.resetToken();
+                this.apiHandlerService.showSuccess('You are logged out.');
+                return true;
+            })
+        );
+    }
+
+    private setLocalStorage(key: string, value: string | number | null): void {
+        if (value !== null && value !== undefined) {
+            const stringValue = typeof value === 'number' ? value.toString() : value;
+            localStorage.setItem(key, stringValue);
+        } else {
+            localStorage.removeItem(key);
+        }
+    }
+}

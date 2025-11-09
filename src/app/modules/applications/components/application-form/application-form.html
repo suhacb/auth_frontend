@@ -1,0 +1,95 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ data.name }}</mat-card-title>
+    <mat-card-subtitle>{{ data.description }}</mat-card-subtitle>
+  </mat-card-header>
+  
+  <div class="spacer"></div>
+  
+  <mat-card-content>
+    <form class="app-form" [formGroup]="form">
+        <mat-form-field appearance="outline" class="full-width" >
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" [readonly]="mode === 'show'" />
+          @if(getError('name', 'backend')) {
+              <mat-error >{{ getError('name', 'backend') }}</mat-error>
+          }
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Realm</mat-label>
+          <input matInput formControlName="realm" [readonly]="mode === 'show'"/>
+          @if(getError('realm', 'backend')) {
+              <mat-error >{{ getError('realm', 'backend') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Client name</mat-label>
+          <input matInput formControlName="clientId" [readonly]="mode === 'show'"/>
+          @if(getError('clientId', 'backend')) {
+              <mat-error >{{ getError('clientId', 'backend') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Client secret</mat-label>
+          <input matInput formControlName="clientSecret" [readonly]="mode === 'show'"/>
+          @if(getError('clientSecret', 'backend')) {
+              <mat-error >{{ getError('clientSecret', 'backend') }}</mat-error>
+          }
+        </mat-form-field>
+
+        @if(mode === 'create' || mode === 'edit') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Grant Type</mat-label>
+            <mat-select formControlName="grantType">
+              <mat-option value="password">password</mat-option>
+              <mat-option value="authorization_code">authorization_code</mat-option>
+              <mat-option value="client_credentials">client_credentials</mat-option>
+              <mat-option value="refresh_token">refresh_token</mat-option>
+              <mat-option value="refresh_token">device_code</mat-option>
+            </mat-select>
+          @if(getError('grantType', 'backend')) {
+              <mat-error >{{ getError('grantType', 'backend') }}</mat-error>
+          }
+          </mat-form-field>
+        } @else {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Grant Type</mat-label>
+            <input matInput type="grantType" formControlName="grantType" [readonly]="mode === 'show'"/>
+          </mat-form-field>          
+        }
+          
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>URL</mat-label>
+          <input matInput type="url" formControlName="url" [readonly]="mode === 'show'"/>
+          @if(getError('url', 'backend')) {
+              <mat-error >{{ getError('url', 'backend') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Callback URL</mat-label>
+          <input matInput type="url" formControlName="callbackUrl" [readonly]="mode === 'show'"/>
+          @if(getError('callbackUrl', 'backend')) {
+              <mat-error >{{ getError('callbackUrl', 'backend') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-span-2 full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="3" formControlName="description" [readonly]="mode === 'show'"></textarea>
+          @if(getError('description', 'backend')) {
+              <mat-error >{{ getError('description', 'backend') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-actions">
+          @if(mode === 'show') { <button mat-button (click)="enterEditMode()">Edit</button> }
+          @if(mode !== 'show') { <button mat-button color="primary" (click)="onStoreOrUpdate()">Save</button> }
+          @if(mode !== 'show') { <button mat-button (click)="onCancel()">Cancel</button> }
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>

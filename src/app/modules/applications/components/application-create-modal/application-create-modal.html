@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Create Application</h2>
+<mat-dialog-content>
+  <app-application-form
+    #applicationForm
+    [data]="application"
+    [mode] = "mode()"
+    [backendErrors]="backendErrors"
+    (storeOrUpdate)="storeOrUpdateApplication($event)"
+    (cancel)="onCreateApplicationCancel()"
+  ></app-application-form>

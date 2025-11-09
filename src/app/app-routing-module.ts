@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Test } from './test/test';
-import { Login } from './login/login';
+import { Test } from './modules/test/test';
+import { Login } from './modules/login/pages/login';
 import { AuthGuard } from './guards/auth-guard';
 import { GuestGuard } from './guards/guest-guard';
-import { AuthLayout } from './auth-layout/auth-layout';
-import { Home } from './home/home';
-import { Applications } from './components/applications/applications';
+import { AuthLayout } from './modules/auth-layout/auth-layout';
+import { Home } from './modules/home/home';
+import { Applications } from './modules/applications/applications';
+import { ApplicationsIndex } from './modules/applications/pages/index/index';
+import { ApplicationsShow } from './modules/applications/pages/show/show';
+import { ApplicationsResolver } from './modules/applications/resolvers/ApplicationsResolver';
+import { ApplicationResolver } from './modules/applications/resolvers/ApplicationResolver';
 
 const routes: Routes = [
   {
@@ -27,7 +31,22 @@ const routes: Routes = [
       {
         path: 'applications',
         component: Applications,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            component: ApplicationsIndex,
+            canActivate: [AuthGuard],
+            resolve: { ApplicationsResolver }
+          },
+          {
+            path: ':id',
+            component: ApplicationsShow,
+            canActivate: [AuthGuard],
+            resolve: { ApplicationResolver }
+          },
+
+        ]
       },
     ]
   },
@@ -39,7 +58,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
