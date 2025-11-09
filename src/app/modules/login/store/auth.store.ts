@@ -146,7 +146,6 @@ export class AuthStore {
                 if (!response.body) throw new Error('Response body is empty');
                 if (response.body === true) return true;
                 if ('access_token' in response.body) {
-                    this.apiHandlerService.showSuccess('Access token refreshed');
                     const accessToken = new AccessTokenMapper().toApp(response.body);
                     this.setToken(accessToken);
                     return true;

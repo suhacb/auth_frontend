@@ -18,7 +18,6 @@
           <div class="user-text">
             <div class="full-name">{{ store.user()?.name }} {{ store.user()?.familyName }}</div>
           </div>
-          <mat-icon>arrow_drop_down</mat-icon>
         </button>
         <mat-menu #userMenu="matMenu">
           <button mat-menu-item (click)="openLogoutModal()">
