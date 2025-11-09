@@ -1,31 +1,41 @@
-/* snackbar.component.scss */
+:host {
+  display: block;
+  width: 100%; /* fill the container */
+}
 
 .snackbar-content {
   display: flex;
   align-items: center;
-  color: #fff;
-  padding: 0 16px;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.25rem 1rem; /* slim padding */
   border-radius: 4px;
-  min-width: 300px;
+  background-color: #4caf50; /* default success color */
+  color: #fff;
 }
 
-/* background color varies by type */
-.snackbar-success {
-  background-color: #4caf50; /* green for success */
-}
-
-.snackbar-error {
-  background-color: #f44336; /* red for error */
-}
-
-.snackbar-icon {
-  margin-right: 8px;
+/* red background for error */
+:host-context(.snackbar-error) .snackbar-content {
+  background-color: #f44336;
+  color: #fff;
 }
 
 .snackbar-message {
-  flex: 1; /* take all available space */
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.1;
+}
+
+.success-icon,
+.error-icon {
+  color: #fff;
 }
 
 .dismiss-button {
-  color: #fff;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
 }

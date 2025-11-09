@@ -37,8 +37,8 @@
               }
             ],
             "styles": [
-              "node_modules/@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.scss"
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles/styles.scss"
             ]
           },
           "configurations": {
@@ -96,8 +96,8 @@
               }
             ],
             "styles": [
-              "node_modules/@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.scss"
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles/styles.scss"
             ]
           }
         }

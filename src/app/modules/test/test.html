@@ -1,11 +1,4 @@
 <div>
-    Test works!
-</div>
-
-<div>
-  Access Token: {{ store.accessToken() }}
-</div>
-
-<div>
-  Refresh Token: {{ store.refreshToken() }}
+  <button matButton color="primary" (click)="onSuccess()">Success</button>
+  <button matButton color="error" (click)="onFailure()">Failure</button>
 </div>

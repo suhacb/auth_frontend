@@ -12,35 +12,46 @@ html, body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Remove background and border from all snackbars */
-.mat-mdc-snackbar .mat-mdc-snackbar-surface {
-  background-color: transparent !important; /* transparent background */
-  box-shadow: none !important;              /* remove elevation shadow */
-  border: none !important;                  /* remove any border */
-  color: var(--md-sys-color-on-surface);    /* use system text color */
-  font: var(--md-sys-typescale-body-medium);
-}
-
-/* Optional: adjust padding if needed */
-.mat-mdc-snackbar .mat-mdc-snackbar-label {
-  padding: 0.5em 1em;
-}
-
-/* Error snackbar */
-.snackbar-error .mat-mdc-snackbar-surface {
-  /* outer container */
-  background: transparent !important; /* make outer container transparent */
+/* ===========================
+   Transparent Snackbars
+   =========================== */
+/* Outer snackbar container */
+.mat-mdc-snack-bar-container {
+  background-color: transparent !important; /* remove container background */
+  padding: 0 !important;
   box-shadow: none !important;
-  color: #fff !important;
 }
 
-/* Success snackbar */
-.snackbar-success .mat-mdc-snackbar-surface {
-  /* outer container */
-  background: transparent !important; /* make outer container transparent */
-  box-shadow: none !important;
-  color: #fff !important;
+/* The inner snackbar surface (MDC “surface”) */
+.mat-mdc-snack-bar-container .mat-mdc-snack-bar-surface {
+  background-color: transparent !important; /* remove surface background */
+  box-shadow: none !important;              /* remove elevation/shadow */
+  border: none !important;
+  outline: none !important;
+  padding: 0.5em 1em;                       /* optional padding for text */
 }
+
+/* Snackbar label (text + icon) */
+.mat-mdc-snack-bar-label {
+  background-color: transparent !important;
+  padding: 0 !important;
+  color: #fff;                               /* text color */
+}
+
+/* Dismiss button adjustments */
+.mat-mdc-snack-bar-container .dismiss-button {
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Optional: remove ripple and focus outlines for all children */
+.mat-mdc-snack-bar-container *,
+.mat-mdc-snack-bar-container *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 
 .list-row {
   display: flex;

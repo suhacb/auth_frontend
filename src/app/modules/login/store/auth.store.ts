@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Token } from '../token';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { catchError, EMPTY, firstValueFrom, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, firstValueFrom, map, Observable, of, tap, throwError } from 'rxjs';
 import { decodeJwt } from '../../../core/jwt/decodeJwt';
 import { ApiHandlerService } from '../../../core/http/api-handler-service';
 import { AccessToken, AccessTokenApiResource } from '../contracts/AccessToken';
@@ -144,15 +144,18 @@ export class AuthStore {
         return this.http.get<AccessTokenApiResource | boolean>(url, { observe: 'response' as const}).pipe(
             map((response) => {
                 if (!response.body) throw new Error('Response body is empty');
-                if (response.body === true) {
-                    return response.body;
-                }
+                if (response.body === true) return true;
                 if ('access_token' in response.body) {
+                    this.apiHandlerService.showSuccess('Access token refreshed');
                     const accessToken = new AccessTokenMapper().toApp(response.body);
                     this.setToken(accessToken);
                     return true;
                 }
                 return false;
+            }),
+            catchError((error) => {
+                this.resetToken();
+                return of(false);
             })
         );
     }
