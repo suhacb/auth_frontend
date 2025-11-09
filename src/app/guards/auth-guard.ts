@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { catchError, map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { AuthStore } from '../modules/login/store/auth.store';
 
 @Injectable({
@@ -47,13 +47,19 @@ export class AuthGuard implements CanActivate {
     }
 
     // As frontend tokens seem to be OK, we ask the backend if token is valid.
+
     return this.store.validateAccessToken().pipe(
-      map((isValid) => {
+      map(isValid => {
         if (isValid === true) {
           return true;
+        } else {
+          return this.router.parseUrl('/login');
         }
-        return this.router.parseUrl('/login');
-      }
-    ));
+      }),
+      catchError(error => {
+        console.error(error);
+        return of(this.router.parseUrl('/login'));
+      })
+    );
   }
 }
