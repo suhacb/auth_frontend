@@ -49,9 +49,8 @@ export class Login implements OnInit {
         const externalAppName = this.store.externalAppName();
         const externalAppUrl = this.store.externalAppUrl();
         if (externalAppName && externalAppUrl) {
-          const form = this.createAccessTokenForm(accessToken);
-          document.body.appendChild(form);
-          form.submit();
+          const redirectUrl = this.buildRedirectUrl(externalAppUrl, accessToken);
+          window.location.href = redirectUrl;
         } else {
           this.router.navigate(['/']);
         }
@@ -70,21 +69,21 @@ export class Login implements OnInit {
     });
   }
 
-  private createAccessTokenForm(accessToken: AccessToken): HTMLFormElement {
-    const form = document.createElement('form');
-    const url = this.store.externalAppName();
-    const accessTokenApi: AccessTokenApiResource = new AccessTokenMapper().toApi(accessToken);
-    form.method = 'POST';
-    form.action = url ? url + '/callback' : '';
-    Object.keys(accessTokenApi).forEach(key => {
-      const typedKey = key as keyof AccessTokenApiResource;
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = String(accessTokenApi[typedKey]);
-      form.appendChild(input);
-    });
-    return form;
-  }
+/**
+ * Build a URL with access token parameters in query string
+ */
+private buildRedirectUrl(baseUrl: string, accessToken: AccessToken): string {
+  const params = new URLSearchParams();
+  const accessTokenApi: AccessTokenApiResource = new AccessTokenMapper().toApi(accessToken);
+  // Convert each property to string and add as query param
+  (Object.keys(accessTokenApi) as Array<keyof AccessTokenApiResource>).forEach(key => {
+    const value = accessTokenApi[key];
+    if (value !== undefined && value !== null) {
+      params.set(key, String(value));
+    }
+  });
+
+  return `${baseUrl}/callback?${params.toString()}`;
+}
 
 }
