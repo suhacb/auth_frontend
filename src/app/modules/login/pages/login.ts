@@ -6,6 +6,8 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Token } from '../token';
 // import { applyValidationErrors } from '../../core/http/form-error-helper';
 import { AuthStore } from '../store/auth.store';
+import { AccessToken, AccessTokenApiResource } from '../contracts/AccessToken';
+import { AccessTokenMapper } from '../models/AccessTokenMapper';
 
 
 @Component({
@@ -43,13 +45,16 @@ export class Login implements OnInit {
 
   onSubmit() {
     const result = this.store.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
-      next: () => {
+      next: (accessToken) => {
         const externalAppName = this.store.externalAppName();
         const externalAppUrl = this.store.externalAppUrl();
         if (externalAppName && externalAppUrl) {
-          window.location.href = externalAppUrl;
+          const form = this.createAccessTokenForm(accessToken);
+          document.body.appendChild(form);
+          form.submit();
+        } else {
+          this.router.navigate(['/']);
         }
-        this.router.navigate(['/']);
       },
       error: (error) => {
         const errors = error.error.errors;
@@ -63,6 +68,23 @@ export class Login implements OnInit {
         }
       }
     });
+  }
+
+  private createAccessTokenForm(accessToken: AccessToken): HTMLFormElement {
+    const form = document.createElement('form');
+    const url = this.store.externalAppName();
+    const accessTokenApi: AccessTokenApiResource = new AccessTokenMapper().toApi(accessToken);
+    form.method = 'POST';
+    form.action = url ? url + '/callback' : '';
+    Object.keys(accessTokenApi).forEach(key => {
+      const typedKey = key as keyof AccessTokenApiResource;
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = String(accessTokenApi[typedKey]);
+      form.appendChild(input);
+    });
+    return form;
   }
 
 }
