@@ -44,6 +44,11 @@ export class Login implements OnInit {
   onSubmit() {
     const result = this.store.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
       next: () => {
+        const externalAppName = this.store.externalAppName();
+        const externalAppUrl = this.store.externalAppUrl();
+        if (externalAppName && externalAppUrl) {
+          window.location.href = externalAppUrl;
+        }
         this.router.navigate(['/']);
       },
       error: (error) => {
