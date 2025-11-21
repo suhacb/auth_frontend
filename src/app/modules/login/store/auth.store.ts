@@ -24,6 +24,8 @@ export class AuthStore {
     private _idToken = signal<string | null>(null);
     private _notBeforePolicy = signal<string | null>(null);
     private _sessionState = signal<string | null>(null);
+    private _externalAppName = signal<string | null>(null);
+    private _externalAppUrl = signal<string | null>(null);
 
     // expose readonly signals
     readonly accessToken = this._accessToken.asReadonly();
@@ -35,6 +37,8 @@ export class AuthStore {
     readonly idToken = this._idToken.asReadonly();
     readonly notBeforePolicy = this._notBeforePolicy.asReadonly();
     readonly sessionState = this._sessionState.asReadonly();
+    readonly externalAppName = this._externalAppName.asReadonly();
+    readonly externalAppUrl = this._externalAppUrl.asReadonly();
 
     // derived/computed signals
     readonly isLoggedIn = computed(() => !!this._accessToken());
@@ -57,7 +61,7 @@ export class AuthStore {
     });
 
     // setters
-    setToken(token: AccessToken | null = null) {
+    setToken(token: AccessToken | null = null): void {
         this.setAccessToken(token ? token.accessToken : null);
         this.setTokenType(token ? token.tokenType : null);
         this.setExpiresIn(token ? token.expiresIn : null);
@@ -69,49 +73,57 @@ export class AuthStore {
         this.setSessionState(token ? token.sessionState : null);
     }
 
-    setAccessToken(token: string | null = null) {
+    setAccessToken(token: string | null = null): void {
         this.setLocalStorage('access_token', token);
         this._accessToken.set(token);
     }
 
-    setTokenType(tokenType: string | null) {
+    setTokenType(tokenType: string | null): void {
         this.setLocalStorage('token_type', tokenType);
         this._tokenType.set(tokenType)
     }
 
-    setExpiresIn(expiresIn: number | null) {
+    setExpiresIn(expiresIn: number | null): void {
         this.setLocalStorage('expires_in', expiresIn);
         this._expiresIn.set(expiresIn)
     }
 
-    setRefreshToken(refreshToken: string | null) {
+    setRefreshToken(refreshToken: string | null): void {
         this.setLocalStorage('refresh_token', refreshToken);
         this._refreshToken.set(refreshToken);
     }
 
-    setRefreshExpiresIn(refreshExpiresIn: number | null) {
+    setRefreshExpiresIn(refreshExpiresIn: number | null): void {
         this.setLocalStorage('refresh_expires_in', refreshExpiresIn);
         this._refreshExpiresIn.set(refreshExpiresIn);
     }
 
-    setScope(scope: string | null) {
+    setScope(scope: string | null): void {
         this.setLocalStorage('scope', scope);
         this._scope.set(scope);
     }
 
-    setIdToken(idToken: string | null) {
+    setIdToken(idToken: string | null): void {
         this.setLocalStorage('id_token', idToken);
         this._idToken.set(idToken);
     }
 
-    setNotBeforePolicy(notBeforePolicy: string | null) {
+    setNotBeforePolicy(notBeforePolicy: string | null): void {
         this.setLocalStorage('not_before_policy', notBeforePolicy);
         this._notBeforePolicy.set(notBeforePolicy);
     }
 
-    setSessionState(sessionState: string | null) {
+    setSessionState(sessionState: string | null): void {
         this.setLocalStorage('session_state', sessionState);
         this._sessionState.set(sessionState);
+    }
+
+    setExternalAppName(externalAppName: string | null): void {
+        this._externalAppName.set(externalAppName);
+    }
+
+    setExternalAppUrl(externalAppUrl: string | null): void {
+        this._externalAppUrl.set(externalAppUrl);
     }
 
     resetToken() {
@@ -128,6 +140,10 @@ export class AuthStore {
             map((response) => {
                 if (!response.body) throw new Error('Response body is empty');
                 const accessToken = new AccessTokenMapper().toApp(response.body);
+                // If externalAppUrl is set, redirect back to external app callback passing a form containing the access token object. Otherwise, login into the Auth
+                if (this.externalAppName() && this.externalAppUrl()) {
+                    return accessToken;
+                }
                 this.setToken(accessToken);
                 return accessToken;
             }),

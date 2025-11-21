@@ -11,6 +11,7 @@ import { ApplicationsIndex } from './modules/applications/pages/index/index';
 import { ApplicationsShow } from './modules/applications/pages/show/show';
 import { ApplicationsResolver } from './modules/applications/resolvers/ApplicationsResolver';
 import { ApplicationResolver } from './modules/applications/resolvers/ApplicationResolver';
+import { LoginResolver } from './modules/login/resolvers/LoginResolver';
 
 const routes: Routes = [
   {
@@ -53,7 +54,8 @@ const routes: Routes = [
   {
     path: 'login',
     component: Login,
-    canActivate: [GuestGuard]
+    canActivate: [GuestGuard],
+    resolve: { LoginResolver }
   },
 ];
 

@@ -6,6 +6,8 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Token } from '../token';
 // import { applyValidationErrors } from '../../core/http/form-error-helper';
 import { AuthStore } from '../store/auth.store';
+import { AccessToken, AccessTokenApiResource } from '../contracts/AccessToken';
+import { AccessTokenMapper } from '../models/AccessTokenMapper';
 
 
 @Component({
@@ -43,8 +45,15 @@ export class Login implements OnInit {
 
   onSubmit() {
     const result = this.store.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
-      next: () => {
-        this.router.navigate(['/']);
+      next: (accessToken) => {
+        const externalAppName = this.store.externalAppName();
+        const externalAppUrl = this.store.externalAppUrl();
+        if (externalAppName && externalAppUrl) {
+          const redirectUrl = this.buildRedirectUrl(externalAppUrl, accessToken);
+          window.location.href = redirectUrl;
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (error) => {
         const errors = error.error.errors;
@@ -59,5 +68,22 @@ export class Login implements OnInit {
       }
     });
   }
+
+/**
+ * Build a URL with access token parameters in query string
+ */
+private buildRedirectUrl(baseUrl: string, accessToken: AccessToken): string {
+  const params = new URLSearchParams();
+  const accessTokenApi: AccessTokenApiResource = new AccessTokenMapper().toApi(accessToken);
+  // Convert each property to string and add as query param
+  (Object.keys(accessTokenApi) as Array<keyof AccessTokenApiResource>).forEach(key => {
+    const value = accessTokenApi[key];
+    if (value !== undefined && value !== null) {
+      params.set(key, String(value));
+    }
+  });
+
+  return `${baseUrl}/callback?${params.toString()}`;
+}
 
 }
